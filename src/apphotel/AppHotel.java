@@ -5,9 +5,14 @@
  */
 package apphotel;
 
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,18 +28,43 @@ public class AppHotel extends Application {
     private EntityManagerFactory emf;
     //Declaramos la varibale para poder realizar las operaciones que queramos dentro de la base de datos
     private EntityManager em;
+    private StackPane root_Main;
+    private Pane root_Hotel_Principal;
 
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
+        
+        //Layout principal creamos un stackPane para suporponer las ventanas
+        root_Main = new StackPane();
+        
+        //Cargamos el archivo FXML AppHotelPrincipalView
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("..\\resources\\fxml\\AppHotelPrincipalView.fxml"));
+        
+        //Creamos un pane donde cargaremos nuestra ventana principal
+        root_Hotel_Principal = fxmlLoader.load();//Controla la gestion de excepciones del loader
+        
+        //Contenido recogido en root_Hotel_Principal_View lo introducimos en el root_Main_view
+        root_Main.getChildren().add(root_Hotel_Principal);
+        
         
         //Nos conectamos a la BD instanciando los objetos emf y em
         emf = Persistence.createEntityManagerFactory("AppHotelPU");
         em = emf.createEntityManager();
+        
+        //Instanciamos el objeto controller que lo necesitaremos para poder gestionar los eventos
+        AppHotelPrincipalViewController principalViewController = (AppHotelPrincipalViewController) fxmlLoader.getController();
+        principalViewController.setEntityManager(em); //El controlador debe tener acceso al objeto em que permite el acceso a los datos de la BD
+        
+        Scene scene = new Scene(root_Main, 600, 400);
+        primaryStage.setTitle("App Hotel - Focal");
+        primaryStage.show();
+        
+        
     }
 
     
-
+    
     //Con el metodo Stop cuando termine la ejecucion del programa terminaremos la conexion con la base de datos 
     @Override
     public void stop() throws Exception {
