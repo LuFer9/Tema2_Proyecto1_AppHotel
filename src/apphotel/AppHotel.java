@@ -5,13 +5,13 @@
  */
 package apphotel;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -19,31 +19,38 @@ import javafx.stage.Stage;
  */
 public class AppHotel extends Application {
     
+    //Declaramos la variable para inicializar la conexion con la base de datos
+    private EntityManagerFactory emf;
+    //Declaramos la varibale para poder realizar las operaciones que queramos dentro de la base de datos
+    private EntityManager em;
+
+    
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        
-        Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        //Nos conectamos a la BD instanciando los objetos emf y em
+        emf = Persistence.createEntityManagerFactory("AppHotelPU");
+        em = emf.createEntityManager();
     }
 
-    /**
-     * @param args the command line arguments
-     */
+    
+
+    //Con el metodo Stop cuando termine la ejecucion del programa terminaremos la conexion con la base de datos 
+    @Override
+    public void stop() throws Exception {
+        //Cerramos los objetos creados anteriormente em y emf
+        em.close();
+        emf.close();
+        
+        //Cerramos la base de datos endebida
+        try{
+            DriverManager.getConnection("jdbc:derby:BDHotel;shutdown=true");
+        } catch(SQLException ex){}
+    }
+    
+    
+    
+    //Metodo main para iniciar el programa
     public static void main(String[] args) {
         launch(args);
     }
