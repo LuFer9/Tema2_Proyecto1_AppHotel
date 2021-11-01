@@ -39,7 +39,7 @@ public class AppHotel extends Application {
         root_Main = new StackPane();
         
         //Cargamos el archivo FXML AppHotelPrincipalView
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("..\\resources\\fxml\\AppHotelPrincipalView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/fxml/AppHotelPrincipalView.fxml"));
         
         //Creamos un pane donde cargaremos nuestra ventana principal
         root_Hotel_Principal = fxmlLoader.load();//Controla la gestion de excepciones del loader
