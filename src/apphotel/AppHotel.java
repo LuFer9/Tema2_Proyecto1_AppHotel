@@ -58,6 +58,7 @@ public class AppHotel extends Application {
         
         Scene scene = new Scene(root_Main, 600, 400);
         primaryStage.setTitle("App Hotel - Focal");
+        primaryStage.setScene(scene);
         primaryStage.show();
         
         
