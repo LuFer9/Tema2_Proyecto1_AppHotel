@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apphotel.AppHotelPrincipalViewController">
+<AnchorPane id="AnchorPane" fx:id="AppHotelPrincipalView" prefHeight="283.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apphotel.AppHotelPrincipalViewController">
     <stylesheets>
         <URL value="@/resources/css/apphotelprincipalview.css" />
     </stylesheets>
    <children>
-      <Button fx:id="btn1" layoutX="274.0" layoutY="175.0" mnemonicParsing="false" text="Button" />
+      <MenuBar fx:id="MenuMain" layoutY="2.0" prefHeight="25.0" prefWidth="678.0">
+        <menus>
+          <Menu fx:id="MenuClientes" mnemonicParsing="false" text="Clientes">
+            <items>
+              <MenuItem fx:id="MenuItem_MostrarClientes" mnemonicParsing="false" text="Mostrar Clientes" />
+            </items>
+          </Menu>
+          <Menu fx:id="MenuReservas" mnemonicParsing="false" text="Reservas">
+            <items>
+              <MenuItem fx:id="MenuItem_Habitaciones" mnemonicParsing="false" onAction="#AbreHabitaciones" text="Habitaciones" />
+                  <MenuItem fx:id="MenuItem_Salon" mnemonicParsing="false" onAction="#AbreSalon" text="Salón" />
+            </items>
+          </Menu>
+          <Menu fx:id="ManuAyuda" mnemonicParsing="false" text="Ayuda">
+            <items>
+              <MenuItem fx:id="MenuItem_Informacion" mnemonicParsing="false" onAction="#AbreInformacion" text="Informacíon" />
+                  <MenuItem fx:id="MenuItem_Salir" mnemonicParsing="false" onAction="#Cerrar" text="Salir" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <ImageView fitHeight="416.0" fitWidth="678.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/ImagenPrinciapal2.jpg" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

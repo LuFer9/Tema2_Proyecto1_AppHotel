@@ -5,16 +5,22 @@
  */
 package apphotel;
 
-import entidades.Persona;
+import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 /**
  * FXML Controller class
@@ -28,7 +34,26 @@ public class AppHotelPrincipalViewController implements Initializable {
      */
     private EntityManager entityManager;
     @FXML
-    private Button btn1;
+    private MenuBar MenuMain;
+    @FXML
+    private Menu MenuClientes;
+    @FXML
+    private MenuItem MenuItem_MostrarClientes;
+    @FXML
+    private Menu MenuReservas;
+    @FXML
+    private MenuItem MenuItem_Habitaciones;
+    @FXML
+    private MenuItem MenuItem_Salon;
+    @FXML
+    private Menu ManuAyuda;
+    @FXML
+    private MenuItem MenuItem_Informacion;
+    @FXML
+    private MenuItem MenuItem_Salir;
+    @FXML
+    private AnchorPane AppHotelPrincipalView;
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -39,5 +64,64 @@ public class AppHotelPrincipalViewController implements Initializable {
     public void setEntityManager(EntityManager entityManager){
         this.entityManager = entityManager;
     } 
+
+    //Con este metodo podemos abrir la ventana de reservas de Habitaciones cuando le demos clic a su respectivo menu
+    @FXML
+    private void AbreHabitaciones(ActionEvent event) {
+        
+        try{
+            //Cargamos la vista Habitaciones
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/fxml/AppHotelReservaHabitacionesView.fxml"));
+            Pane rootHabitacionesView = fxmlLoader.load();
+            
+            //Ocultamos la vista principal de la AppHotelPrincipalView
+            AppHotelPrincipalView.setVisible(false);
+            
+            //Añadimos la vista Habitaciones al Stackpane Principal
+            StackPane root_AppHotelPrincipalView = (StackPane) AppHotelPrincipalView.getScene().getRoot();
+            
+            //Añadimos el controlador de del AppHotelReservaHabitaciones
+            AppHotelReservaHabitacionesViewController HabitacionesController = (AppHotelReservaHabitacionesViewController) fxmlLoader.getController();
+            HabitacionesController.setRootPrincipalView(AppHotelPrincipalView);
+        }
+        catch(IOException ex){
+            Logger.getLogger(AppHotelPrincipalViewController.class.getName()).log(Level.SEVERE,null,ex);
+        }
+        
+    }
+
+    //Con este metodo podemos abrir la ventana de reservas de salon cuando le demos clic a su respectivo menu
+    @FXML
+    private void AbreSalon(ActionEvent event) {
+        
+        try{
+            //Cargamos la vista Habitaciones
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/fxml/AppHotelReservaSalonView.fxml"));
+            Pane rootSalonView = fxmlLoader.load();
+            
+            //Ocultamos la vista principal de la AppHotelPrincipalView
+            AppHotelPrincipalView.setVisible(false);
+            
+            //Añadimos la vista Habitaciones al Stackpane Principal
+            StackPane root_AppHotelPrincipalView = (StackPane) AppHotelPrincipalView.getScene().getRoot();
+            
+            //Añadimos el controlador de del AppHotelReservaHabitaciones
+            AppHotelReservaSalonViewController SalonController = (AppHotelReservaSalonViewController) fxmlLoader.getController();
+            SalonController.setRootPrincipalView(AppHotelPrincipalView);
+        }
+        catch(IOException ex){
+            Logger.getLogger(AppHotelPrincipalViewController.class.getName()).log(Level.SEVERE,null,ex);
+        }
+    }
+
+    @FXML
+    private void AbreInformacion(ActionEvent event) {
+    }
+
+    //Cerramos la aplicacion al darle la menu Item cerrar
+    @FXML
+    private void Cerrar(ActionEvent event) {
+        System.exit(0);
+    }
     
 }

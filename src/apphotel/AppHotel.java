@@ -56,8 +56,9 @@ public class AppHotel extends Application {
         AppHotelPrincipalViewController principalViewController = (AppHotelPrincipalViewController) fxmlLoader.getController();
         principalViewController.setEntityManager(em); //El controlador debe tener acceso al objeto em que permite el acceso a los datos de la BD
         
-        Scene scene = new Scene(root_Main, 600, 400);
+        Scene scene = new Scene(root_Main);
         primaryStage.setTitle("App Hotel - Focal");
+        primaryStage.setScene(scene);
         primaryStage.show();
         
         
