@@ -79,6 +79,7 @@ public class AppHotelPrincipalViewController implements Initializable {
             
             //Añadimos la vista Habitaciones al Stackpane Principal
             StackPane root_AppHotelPrincipalView = (StackPane) AppHotelPrincipalView.getScene().getRoot();
+            root_AppHotelPrincipalView.getChildren().add(rootHabitacionesView);
             
             //Añadimos el controlador de del AppHotelReservaHabitaciones
             AppHotelReservaHabitacionesViewController HabitacionesController = (AppHotelReservaHabitacionesViewController) fxmlLoader.getController();
@@ -104,10 +105,11 @@ public class AppHotelPrincipalViewController implements Initializable {
             
             //Añadimos la vista Habitaciones al Stackpane Principal
             StackPane root_AppHotelPrincipalView = (StackPane) AppHotelPrincipalView.getScene().getRoot();
+            root_AppHotelPrincipalView.getChildren().add(rootSalonView);
             
             //Añadimos el controlador de del AppHotelReservaHabitaciones
-            AppHotelReservaSalonViewController SalonController = (AppHotelReservaSalonViewController) fxmlLoader.getController();
-            SalonController.setRootPrincipalView(AppHotelPrincipalView);
+            AppHotelReservaSalonViewController salonController = (AppHotelReservaSalonViewController) fxmlLoader.getController();
+            salonController.setRootPrincipalView(AppHotelPrincipalView);
         }
         catch(IOException ex){
             Logger.getLogger(AppHotelPrincipalViewController.class.getName()).log(Level.SEVERE,null,ex);
