@@ -8,6 +8,7 @@ package apphotel;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.Pane;
 
 /**
  * FXML Controller class
@@ -19,9 +20,16 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     /**
      * Initializes the controller class.
      */
+    
+    private Pane rootPrincipalView;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+    
+    public void setRootPrincipalView(Pane rootPrincipalView){
+        this.rootPrincipalView = rootPrincipalView;
+    }
     
 }
