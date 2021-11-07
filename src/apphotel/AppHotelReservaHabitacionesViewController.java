@@ -17,6 +17,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 
 /**
@@ -63,6 +64,8 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     private RadioButton radioButtonMediaPension;
     @FXML
     private RadioButton radioButtonPensionCompleta;
+    @FXML
+    private ToggleGroup toggleGroupRegimen;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
