@@ -5,22 +5,25 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apphotel.AppHotelReservaSalonViewController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: #DFEAF2;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apphotel.AppHotelReservaSalonViewController">
     <stylesheets>
         <URL value="@/resources/css/apphotelreservasalonview.css" />
     </stylesheets>
    <children>
-      <TextFlow layoutX="37.0" layoutY="28.0" prefHeight="34.0" prefWidth="140.0">
+      <TextFlow layoutX="37.0" layoutY="28.0" prefHeight="34.0" prefWidth="159.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Datos del cliente" underline="true" wrappingWidth="103.294921875">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" text="Datos del cliente" underline="true" wrappingWidth="103.294921875">
                <font>
                   <Font size="18.0" />
                </font>
@@ -28,19 +31,19 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" />
          </children>
       </TextFlow>
-      <Text layoutX="37.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Datos de la reserva" underline="true" wrappingWidth="159.0">
+      <Text layoutX="35.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: Bold;" text="Datos de la reserva" underline="true" wrappingWidth="173.0">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <Text layoutX="37.0" layoutY="213.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Tipo de evento" />
-      <RadioButton layoutX="38.0" layoutY="226.0" mnemonicParsing="false" text="Banquete" />
-      <RadioButton layoutX="38.0" layoutY="254.0" mnemonicParsing="false" text="Jornada" />
-      <RadioButton layoutX="38.0" layoutY="283.0" mnemonicParsing="false" text="Congreso" />
-      <HBox layoutX="173.0" layoutY="222.0" prefHeight="25.0" prefWidth="159.0" spacing="10.0">
+      <Text layoutX="37.0" layoutY="213.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: Bold;" text="Tipo de evento" />
+      <RadioButton fx:id="RadioButtonBanquete" layoutX="38.0" layoutY="226.0" mnemonicParsing="false" onAction="#OnActionButtonBanquete" text="Banquete" />
+      <RadioButton fx:id="RadioButtonJornada" layoutX="38.0" layoutY="254.0" mnemonicParsing="false" onAction="#onActionButtonJornada" text="Jornada" />
+      <RadioButton fx:id="RadioButtonCongreso" layoutX="38.0" layoutY="283.0" mnemonicParsing="false" onAction="#OnActionButtonCongreso" text="Congreso" />
+      <HBox fx:id="hBoxNumeroPersona" layoutX="173.0" layoutY="222.0" prefHeight="25.0" prefWidth="159.0" spacing="10.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nº de personas:" />
-            <TextField fx:id="nPerField" prefHeight="7.0" prefWidth="54.0" />
+            <TextField fx:id="textFieldNumPersonas" prefHeight="7.0" prefWidth="54.0" />
          </children>
       </HBox>
       <HBox layoutX="42.0" layoutY="69.0" prefHeight="25.0" prefWidth="494.0" spacing="7.0">
@@ -59,28 +62,39 @@
             <TextField fx:id="textFieldTelefono" prefHeight="25.0" prefWidth="159.0" />
          </children>
       </HBox>
-      <HBox layoutX="332.0" layoutY="222.0" prefHeight="25.0" prefWidth="239.0" spacing="7.0">
+      <HBox fx:id="hBoxTipoCocina" layoutX="332.0" layoutY="222.0" prefHeight="25.0" prefWidth="239.0" spacing="7.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tipo de cocina:" />
-            <ComboBox prefWidth="150.0" />
+            <ComboBox fx:id="ComboBoxCocina" prefWidth="150.0" />
          </children>
       </HBox>
-      <HBox layoutX="150.0" layoutY="283.0" prefHeight="34.0" prefWidth="301.0" spacing="10.0">
+      <HBox fx:id="hBoxHabitaciones" layoutX="220.0" layoutY="283.0" prefHeight="34.0" prefWidth="301.0" spacing="10.0">
          <children>
             <CheckBox mnemonicParsing="false" text="¿Necesitas habitaciones?" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="¿Cuántas?" />
-            <TextField prefHeight="25.0" prefWidth="57.0" />
+            <TextField fx:id="textFieldCantidadPersona" prefHeight="25.0" prefWidth="52.0" />
          </children>
       </HBox>
-      <Button fx:id="buttonLimpiar" layoutX="46.0" layoutY="450.0" mnemonicParsing="false" text="Limpiar" />
-      <Button fx:id="buttonAceptar" layoutX="429.0" layoutY="450.0" mnemonicParsing="false" prefWidth="57.0" text="Aceptar" />
-      <Button layoutX="505.0" layoutY="450.0" mnemonicParsing="false" text="Cancelar" />
-      <HBox layoutX="289.0" layoutY="318.0" prefHeight="25.0" prefWidth="140.0" spacing="7.0">
+      <Button fx:id="buttonLimpiar" layoutX="46.0" layoutY="450.0" mnemonicParsing="false" onAction="#onActionButtonLimpiar" style="-fx-background-color: #FCDEB0;" text="Limpiar">
+         <effect>
+            <DropShadow />
+         </effect></Button>
+      <Button fx:id="buttonAceptar" layoutX="429.0" layoutY="450.0" mnemonicParsing="false" onAction="#onActionButtonAceptar" prefWidth="57.0" style="-fx-background-color: #FCDEB0;" text="Aceptar">
+         <effect>
+            <DropShadow />
+         </effect></Button>
+      <Button fx:id="buttonCancelar" layoutX="505.0" layoutY="450.0" mnemonicParsing="false" onAction="#onActionButtonCancelar" style="-fx-background-color: #FCDEB0;" text="Cancelar">
+         <effect>
+            <DropShadow />
+         </effect></Button>
+      <HBox fx:id="hBoxNumeroDias" layoutX="312.0" layoutY="319.0" prefHeight="25.0" prefWidth="140.0" spacing="7.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Número de días:" />
-            <TextField fx:id="numDiaField" prefHeight="25.0" prefWidth="49.0" />
+            <TextField fx:id="textFieldNumDias" prefHeight="25.0" prefWidth="49.0" />
          </children>
       </HBox>
-      <DatePicker layoutX="42.0" layoutY="318.0" prefHeight="25.0" prefWidth="211.0" promptText="Fecha de evento" />
+      <DatePicker fx:id="datePickerFechaEvento" layoutX="49.0" layoutY="319.0" prefHeight="25.0" prefWidth="212.0" promptText="Fecha de evento" />
+      <ImageView fx:id="imageViewFoto" fitHeight="92.0" fitWidth="301.0" layoutX="42.0" layoutY="351.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="textLabelTipoEvento" layoutX="438.0" layoutY="359.0" prefHeight="70.0" prefWidth="132.0" />
    </children>
 </AnchorPane>
