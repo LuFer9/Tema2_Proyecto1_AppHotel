@@ -6,6 +6,8 @@
     <class>entidades.ReservaSalon</class>
     <class>entidades.Provincia</class>
     <class>entidades.Persona</class>
+    <class>apphotel.TipoHabitacion</class>
+    <class>apphotel.TipoCocina</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby:BDHotel;create=true"/>
       <property name="javax.persistence.jdbc.user" value="APP"/>

@@ -84,6 +84,9 @@ public class AppHotelPrincipalViewController implements Initializable {
             //Añadimos el controlador de del AppHotelReservaHabitaciones
             AppHotelReservaHabitacionesViewController HabitacionesController = (AppHotelReservaHabitacionesViewController) fxmlLoader.getController();
             HabitacionesController.setRootPrincipalView(AppHotelPrincipalView);
+            
+            //Persona nueva o existente
+            HabitacionesController.setPersona(entityManager);
         }
         catch(IOException ex){
             Logger.getLogger(AppHotelPrincipalViewController.class.getName()).log(Level.SEVERE,null,ex);
