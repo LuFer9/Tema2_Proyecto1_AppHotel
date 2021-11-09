@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package apphotel;
+package entidades;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -20,12 +20,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Luis
  */
 @Entity
-@Table(name = "TIPO_HABITACION")
+@Table(name = "TIPO_COCINA")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TipoHabitacion.findAll", query = "SELECT t FROM TipoHabitacion t"),
-    @NamedQuery(name = "TipoHabitacion.findByNombre", query = "SELECT t FROM TipoHabitacion t WHERE t.nombre = :nombre")})
-public class TipoHabitacion implements Serializable {
+    @NamedQuery(name = "TipoCocina.findAll", query = "SELECT t FROM TipoCocina t"),
+    @NamedQuery(name = "TipoCocina.findByNombre", query = "SELECT t FROM TipoCocina t WHERE t.nombre = :nombre")})
+public class TipoCocina implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -33,10 +33,10 @@ public class TipoHabitacion implements Serializable {
     @Column(name = "NOMBRE")
     private String nombre;
 
-    public TipoHabitacion() {
+    public TipoCocina() {
     }
 
-    public TipoHabitacion(String nombre) {
+    public TipoCocina(String nombre) {
         this.nombre = nombre;
     }
 
@@ -58,10 +58,10 @@ public class TipoHabitacion implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TipoHabitacion)) {
+        if (!(object instanceof TipoCocina)) {
             return false;
         }
-        TipoHabitacion other = (TipoHabitacion) object;
+        TipoCocina other = (TipoCocina) object;
         if ((this.nombre == null && other.nombre != null) || (this.nombre != null && !this.nombre.equals(other.nombre))) {
             return false;
         }
@@ -70,7 +70,7 @@ public class TipoHabitacion implements Serializable {
 
     @Override
     public String toString() {
-        return "apphotel.TipoHabitacion[ nombre=" + nombre + " ]";
+        return "apphotel.TipoCocina[ nombre=" + nombre + " ]";
     }
     
 }

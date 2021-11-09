@@ -5,6 +5,7 @@
  */
 package apphotel;
 
+import entidades.Persona;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -53,6 +54,7 @@ public class AppHotelPrincipalViewController implements Initializable {
     private MenuItem MenuItem_Salir;
     @FXML
     private AnchorPane AppHotelPrincipalView;
+    private Persona persona;
     
     
     @Override
@@ -86,7 +88,11 @@ public class AppHotelPrincipalViewController implements Initializable {
             HabitacionesController.setRootPrincipalView(AppHotelPrincipalView);
             
             //Persona nueva o existente
-            HabitacionesController.setPersona(entityManager);
+            persona = new Persona();
+            HabitacionesController.setPersona(entityManager, persona);
+            
+            //Mostramos datos
+            HabitacionesController.mostrarDatos();
         }
         catch(IOException ex){
             Logger.getLogger(AppHotelPrincipalViewController.class.getName()).log(Level.SEVERE,null,ex);
