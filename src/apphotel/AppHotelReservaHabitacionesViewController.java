@@ -190,6 +190,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                         
                         nuevaPersona = true;
                         System.out.println("ola nueva persona");
+                        LimpiarDatos();
                                 
                         if(textFieldDNI.getText().equals("")){
                            
@@ -219,8 +220,6 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         Alert alert = new Alert(AlertType.ERROR);
         String cadenaAlert = "";
         salir = false;
-        //Iniciamos de nuevo la transaccion
-        entityManager.getTransaction().begin();
         
         if(nuevaPersona){
             persona = new Persona();
@@ -231,6 +230,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
        {
            try
            {
+                
                 //Combrobacion DNI
                 if(comprobarDNI()){
                    
@@ -402,19 +402,25 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                 //Insertamos en la base de datos
                 
                 if(nuevaPersona && !salir){
+                    //Iniciamos de nuevo la transaccion
+                    entityManager.getTransaction().begin();
+                    
                     entityManager.persist(persona);
                     entityManager.persist(reservaH);
                     Alert alertNuevaPersona = new Alert(AlertType.INFORMATION, "Nuevo cliente insertado y datos de reserva insertados con exito");
                     alertNuevaPersona.showAndWait();
+                    entityManager.getTransaction().commit();
                 }
                 if(!nuevaPersona && !salir){
+                    //Iniciamos de nuevo la transaccion
+                    entityManager.getTransaction().begin();
+                    
                     entityManager.merge(persona);
                     entityManager.persist(reservaH);
                     Alert alertReserva = new Alert(AlertType.INFORMATION, "Datos de reserva insertados con exito");
                     alertReserva.showAndWait();
-                }
-                
-                entityManager.getTransaction().commit();
+                    entityManager.getTransaction().commit();
+                }          
                 
            }
            catch(RollbackException ex) // Los datos introducidos no cumplen los requisitos
@@ -430,6 +436,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                alertErrorEnBD.setHeaderText("Argumento Ilegal, No se ha podido encontrar ningun Cliente o no se ha podido crear");
                alertErrorEnBD.setContentText(e.getLocalizedMessage());
                alertErrorEnBD.showAndWait();
+               
            }
            
        }
@@ -577,6 +584,21 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         
         return match.matches();
     
+    }
+    
+    public void LimpiarDatos(){
+        
+        textFieldNombre.setText(null);
+        textFieldNombre.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
+        
+        textFieldDireccion.setText(null);
+        textFieldDireccion.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
+        
+        textFieldLocalidad.setText(null);
+        textFieldLocalidad.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
+       
+        comboBoxProvincia.getSelectionModel().clearSelection();
+        comboBoxProvincia.setDisable(false);
     }
     
            
