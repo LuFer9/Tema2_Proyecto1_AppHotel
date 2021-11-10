@@ -8,12 +8,12 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" fx:id="AppHotelPrincipalView" prefHeight="283.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apphotel.AppHotelPrincipalViewController">
+<AnchorPane id="AnchorPane" fx:id="AppHotelPrincipalView" prefHeight="498.0" prefWidth="619.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apphotel.AppHotelPrincipalViewController">
     <stylesheets>
         <URL value="@/resources/css/apphotelprincipalview.css" />
     </stylesheets>
    <children>
-      <MenuBar fx:id="MenuMain" layoutY="2.0" prefHeight="25.0" prefWidth="678.0">
+      <MenuBar fx:id="MenuMain" layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
         <menus>
           <Menu fx:id="MenuClientes" mnemonicParsing="false" text="Clientes">
             <items>
@@ -34,9 +34,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ImageView fitHeight="416.0" fitWidth="678.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="490.0" fitWidth="622.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/ImagenPrinciapal2.jpg" />
+            <Image url="@../images/Hotel4.jpg" />
          </image>
       </ImageView>
    </children>

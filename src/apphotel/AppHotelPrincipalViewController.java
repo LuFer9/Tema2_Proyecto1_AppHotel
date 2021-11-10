@@ -119,6 +119,15 @@ public class AppHotelPrincipalViewController implements Initializable {
             //Añadimos el controlador de del AppHotelReservaHabitaciones
             AppHotelReservaSalonViewController salonController = (AppHotelReservaSalonViewController) fxmlLoader.getController();
             salonController.setRootPrincipalView(AppHotelPrincipalView);
+            
+            persona = new Persona();
+            salonController.setPersona(entityManager, persona);
+            
+            //Mostramos datos
+            salonController.mostrarDatos();
+            
+            //Desabilitamos ciertos nodos al abrir la ventana
+            salonController.desabilitarDatosAlPrincipio();
         }
         catch(IOException ex){
             Logger.getLogger(AppHotelPrincipalViewController.class.getName()).log(Level.SEVERE,null,ex);

@@ -371,7 +371,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                     //Comprobamos si las fecha de llegada es mayor que la de salida
                     if(datePickerLlegada.getValue().isAfter(datePickerSalida.getValue())){
                         errorFormato = true;     
-                        cadenaAlert += "Debes seleccionar fechas de llegada y salida que no sean el mismo dia\n";
+                        cadenaAlert += "Debes seleccionar fechas de llegada y salida coherentes\n";
 
                     }
                     
@@ -588,17 +588,31 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     
     public void LimpiarDatos(){
         
-        textFieldNombre.setText(null);
+        textFieldNombre.setText("");
         textFieldNombre.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
         
-        textFieldDireccion.setText(null);
+        textFieldDireccion.setText("");
         textFieldDireccion.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
         
-        textFieldLocalidad.setText(null);
+        textFieldLocalidad.setText("");
         textFieldLocalidad.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
        
         comboBoxProvincia.getSelectionModel().clearSelection();
         comboBoxProvincia.setDisable(false);
+        
+        datePickerSalida.setValue(null);
+        datePickerLlegada.setValue(null);
+        
+        SpinnerValueFactory<Integer> gradesValue = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
+        this.spinnerNumHab.setValueFactory(gradesValue);
+        
+        comboBoxTipoHab.getSelectionModel().clearSelection();
+        
+        checkBoxFumador.setSelected(false);
+        
+        radioButtonAlojamiento.setSelected(false);
+        radioButtonMediaPension.setSelected(false);
+        radioButtonPensionCompleta.setSelected(false);
     }
     
            

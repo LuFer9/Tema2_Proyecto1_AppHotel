@@ -84,7 +84,7 @@ public class TipoCocina implements Serializable {
 
     @Override
     public String toString() {
-        return "entidades.TipoCocina[ nombre=" + nombre + " ]";
+        return nombre;
     }
     
 }
