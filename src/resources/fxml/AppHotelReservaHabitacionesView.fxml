@@ -95,7 +95,7 @@
                                  <font>
                                     <Font size="14.0" />
                                  </font></Label>
-                              <Spinner fx:id="spinnerNumHab" editable="true" prefHeight="25.0" prefWidth="71.0" />
+                              <Spinner fx:id="spinnerNumHab" blendMode="DARKEN" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="71.0" />
                            </children>
                         </HBox>
                         <HBox prefHeight="25.0" prefWidth="270.0">

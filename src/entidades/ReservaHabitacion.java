@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ReservaHabitacion.findByFechaSalida", query = "SELECT r FROM ReservaHabitacion r WHERE r.fechaSalida = :fechaSalida"),
     @NamedQuery(name = "ReservaHabitacion.findByRegimen", query = "SELECT r FROM ReservaHabitacion r WHERE r.regimen = :regimen"),
     @NamedQuery(name = "ReservaHabitacion.findByNumeroHabitaciones", query = "SELECT r FROM ReservaHabitacion r WHERE r.numeroHabitaciones = :numeroHabitaciones"),
-    @NamedQuery(name = "ReservaHabitacion.findByTipoHabitacion", query = "SELECT r FROM ReservaHabitacion r WHERE r.tipoHabitacion = :tipoHabitacion"),
     @NamedQuery(name = "ReservaHabitacion.findByFumador", query = "SELECT r FROM ReservaHabitacion r WHERE r.fumador = :fumador")})
 public class ReservaHabitacion implements Serializable {
 
@@ -60,14 +59,14 @@ public class ReservaHabitacion implements Serializable {
     @Basic(optional = false)
     @Column(name = "NUMERO_HABITACIONES")
     private int numeroHabitaciones;
-    @Basic(optional = false)
-    @Column(name = "TIPO_HABITACION")
-    private String tipoHabitacion;
     @Column(name = "FUMADOR")
     private Boolean fumador;
     @JoinColumn(name = "DNI_CLIENTE", referencedColumnName = "DNI")
     @ManyToOne(optional = false)
     private Persona dniCliente;
+    @JoinColumn(name = "TIPO_HABITACION", referencedColumnName = "NOMBRE")
+    @ManyToOne(optional = false)
+    private TipoHabitacion tipoHabitacion;
 
     public ReservaHabitacion() {
     }
@@ -76,13 +75,12 @@ public class ReservaHabitacion implements Serializable {
         this.codHabitacion = codHabitacion;
     }
 
-    public ReservaHabitacion(Integer codHabitacion, Date fechaLlegada, Date fechaSalida, String regimen, int numeroHabitaciones, String tipoHabitacion) {
+    public ReservaHabitacion(Integer codHabitacion, Date fechaLlegada, Date fechaSalida, String regimen, int numeroHabitaciones) {
         this.codHabitacion = codHabitacion;
         this.fechaLlegada = fechaLlegada;
         this.fechaSalida = fechaSalida;
         this.regimen = regimen;
         this.numeroHabitaciones = numeroHabitaciones;
-        this.tipoHabitacion = tipoHabitacion;
     }
 
     public Integer getCodHabitacion() {
@@ -125,14 +123,6 @@ public class ReservaHabitacion implements Serializable {
         this.numeroHabitaciones = numeroHabitaciones;
     }
 
-    public String getTipoHabitacion() {
-        return tipoHabitacion;
-    }
-
-    public void setTipoHabitacion(String tipoHabitacion) {
-        this.tipoHabitacion = tipoHabitacion;
-    }
-
     public Boolean getFumador() {
         return fumador;
     }
@@ -147,6 +137,14 @@ public class ReservaHabitacion implements Serializable {
 
     public void setDniCliente(Persona dniCliente) {
         this.dniCliente = dniCliente;
+    }
+
+    public TipoHabitacion getTipoHabitacion() {
+        return tipoHabitacion;
+    }
+
+    public void setTipoHabitacion(TipoHabitacion tipoHabitacion) {
+        this.tipoHabitacion = tipoHabitacion;
     }
 
     @Override

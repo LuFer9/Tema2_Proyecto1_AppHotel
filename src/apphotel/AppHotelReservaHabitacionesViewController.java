@@ -10,13 +10,22 @@ import entidades.Provincia;
 import entidades.ReservaHabitacion;
 import entidades.TipoHabitacion;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -25,6 +34,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
@@ -32,7 +42,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 
 /**
  * FXML Controller class
@@ -83,8 +95,17 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     
     private EntityManager entityManager;
     private Persona persona;
+    private ReservaHabitacion reservaH;
+    private TipoHabitacion tipoHabitacion;
     @FXML
     private AnchorPane viewReservaHabitacion;
+    private boolean nuevaPersona;
+    private boolean insertado;
+    private boolean salir;
+    
+    public static final String ALOJAMIENTOYDESAYUNO = "ALOJAMIENTO Y DESAYUNO";
+    public static final String MEDIAPENSION = "MEDIA PENSION";
+    public static final String PENSIONCOMPLETA = "PENSION COMPLETA";
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -92,6 +113,10 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         Query queryPersonaFindAll = entityManager.createNamedQuery("Persona.findByDni");
         List listPersona = queryPersonaFindAll.getResultList();
         */
+        //Configuramos el spinner
+        SpinnerValueFactory<Integer> gradesValue = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
+        this.spinnerNumHab.setValueFactory(gradesValue);
+
             textFieldDNI.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldProperty, Boolean newProperty) -> {
                 
                 if(newProperty){
@@ -102,13 +127,16 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                     
                    
                     try{    
-                    
+    
                         persona = entityManager.find(Persona.class, textFieldDNI.getText());
-
+                        nuevaPersona = false;
 
                         textFieldNombre.setText(persona.getNombre());
+                        textFieldNombre.setEditable(false);
                         textFieldDireccion.setText(persona.getDireccion());
+                        textFieldDireccion.setEditable(false);
                         textFieldLocalidad.setText(persona.getLocalidad());
+                        textFieldLocalidad.setEditable(false);
 
                         //Provincia consulta para combo box
                         Query queryProvincialFindAll = entityManager.createNamedQuery("Provincia.findAll");
@@ -154,18 +182,26 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
 
                         });
                         
+                        
+                        comboBoxProvincia.setDisable(true);
+                        
                     }
                     catch(NullPointerException e){
                         
+                        nuevaPersona = true;
+                        System.out.println("ola nueva persona");
+                                
                         if(textFieldDNI.getText().equals("")){
+                           
+                        }
+                        else{
                             
                         }
                         
                     }
                 }
             });
-        
-          
+                     
     }    
     
     // Metodo para asignarle el objeto correspondiente desde la otra clase controladora
@@ -175,8 +211,228 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     
 
     @FXML
-    private void onActionButtonAceptar(ActionEvent event) 
-    {
+    private void onActionButtonAceptar(ActionEvent event){
+        
+        boolean errorFormato = false;
+        reservaH = new ReservaHabitacion();
+        tipoHabitacion = new TipoHabitacion();
+        Alert alert = new Alert(AlertType.ERROR);
+        String cadenaAlert = "";
+        salir = false;
+        //Iniciamos de nuevo la transaccion
+        entityManager.getTransaction().begin();
+        
+        if(nuevaPersona){
+            persona = new Persona();
+        }
+            
+        //Actualizamos los datos de la persona en cuestion
+       if(!salir)
+       {
+           try
+           {
+                //Combrobacion DNI
+                if(comprobarDNI()){
+                   
+                    persona.setDni(textFieldDNI.getText()); 
+                    //Insertamos nuestro DNI en la tabla reserva habitaciones
+                    reservaH.setDniCliente(persona);
+                   
+                }
+                else{
+                    errorFormato = true;
+                    cadenaAlert += "DNI no valido\n";
+                    textFieldDNI.requestFocus();
+                }
+                
+                //Comprobacion nombre
+                if(textFieldNombre.getText().length() > 2 && textFieldNombre.getText().length() <= 20){
+                    
+                    persona.setNombre(textFieldNombre.getText());
+                }
+                else{
+                    errorFormato = true;
+                    cadenaAlert += "Nombre no valido\n";
+                    textFieldNombre.requestFocus();
+                }
+                
+                //Comprobacion direccion
+                if(textFieldDireccion.getText().length() > 5 && textFieldDireccion.getText().length() <= 50){
+                    
+                    persona.setDireccion(textFieldDireccion.getText());
+                }
+                else{
+                    errorFormato = true;
+                    cadenaAlert += "Direccion no valida\n";
+                    textFieldDireccion.requestFocus();
+                }
+                
+                //Comprobacion localidad
+                if(textFieldLocalidad.getText().length() > 3 && textFieldLocalidad.getText().length() <= 20){
+                    
+                    persona.setLocalidad(textFieldLocalidad.getText());
+                }
+                else{
+                    errorFormato = true;
+                    cadenaAlert += "Localidad no valida\n";
+                    textFieldLocalidad.requestFocus();
+                }
+                
+                //Comprobacion provincia
+                if(comboBoxProvincia.getValue() != null){
+                    
+                    persona.setProvincia(comboBoxProvincia.getValue());
+                }
+                else{
+                    errorFormato = true;
+                    cadenaAlert += "Debes selccionar una provincia\n";
+                   
+                }
+                
+                
+                
+                
+                //Comprobacion regimen
+                if(radioButtonAlojamiento.isSelected()){
+                    reservaH.setRegimen(ALOJAMIENTOYDESAYUNO);
+                }
+                else if(radioButtonMediaPension.isSelected()){
+                    reservaH.setRegimen(MEDIAPENSION);
+                }
+                else if(radioButtonPensionCompleta.isSelected()){
+                    reservaH.setRegimen(PENSIONCOMPLETA);
+                }
+                else{
+                    errorFormato = true;
+                    cadenaAlert += "Debes seleccionar un régimen\n";
+                    
+                }
+                
+                //Comprobacion tipo habitacion
+                if(comboBoxTipoHab.getValue() != null){
+                    
+                    try{
+                        Query queryFindTipoHab = entityManager.createNamedQuery("TipoHabitacion.findByNombre");
+                        queryFindTipoHab.setParameter("nombre", comboBoxTipoHab.getValue().toString());
+                        tipoHabitacion = (TipoHabitacion) queryFindTipoHab.getSingleResult();
+                        
+                        
+                        reservaH.setTipoHabitacion(tipoHabitacion);
+                    }
+                    catch(NoResultException e){
+                        
+                    }
+                }
+                else{
+                    errorFormato = true;
+                    cadenaAlert += "Debes seleccionar un tipo habitación\n";
+                  
+                }
+                
+                //Comprobacion fechas
+                //Fechas
+                if (datePickerLlegada.getValue() != null){
+                    
+                    LocalDate localDate = datePickerLlegada.getValue();
+                    ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+                    Instant instant = zonedDateTime.toInstant();
+                    Date date = Date.from(instant);
+                    reservaH.setFechaLlegada(date);
+                }
+                else {
+                    errorFormato = true;
+                    cadenaAlert += "Debes seleccionar la fecha de llegada\n";
+                    
+                }
+                
+                
+                if(datePickerSalida.getValue() != null){
+                    LocalDate localDate = datePickerSalida.getValue();
+                    ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+                    Instant instant = zonedDateTime.toInstant();
+                    Date date = Date.from(instant);
+                    reservaH.setFechaSalida(date);
+                }
+                else {
+                    errorFormato = true;
+                    cadenaAlert += "Debes seleccionar la fecha de salida\n";
+                    
+                }
+                
+                
+                //comprobamos si las fechas son iguales
+                if(datePickerSalida.getValue() != null && datePickerLlegada.getValue() != null){
+                    
+                    if(datePickerSalida.getValue().equals(datePickerLlegada.getValue())){
+                    errorFormato = true;
+                    cadenaAlert += "Debes seleccionar fechas de llegada y salida que no sean el mismo dia\n";
+                    
+                    }
+                    //Comprobamos si las fecha de llegada es mayor que la de salida
+                    if(datePickerLlegada.getValue().isAfter(datePickerSalida.getValue())){
+                        errorFormato = true;     
+                        cadenaAlert += "Debes seleccionar fechas de llegada y salida que no sean el mismo dia\n";
+
+                    }
+                    
+                }
+                
+                //Comprobacion numero habitaciones
+                reservaH.setNumeroHabitaciones(spinnerNumHab.getValue());
+                
+                //casilla de fumador
+                if(checkBoxFumador.isSelected()){
+                    reservaH.setFumador(true);
+                }
+                else{
+                    reservaH.setFumador(false);
+                }
+                
+                //En caso de que haya algun error de formato mostramos los fallos
+                if(errorFormato){
+                  alert.setContentText(cadenaAlert);
+                  alert.showAndWait();
+                  salir = true;
+                }
+                
+                 
+                
+                
+                
+                //Insertamos en la base de datos
+                
+                if(nuevaPersona && !salir){
+                    entityManager.persist(persona);
+                    entityManager.persist(reservaH);
+                    Alert alertNuevaPersona = new Alert(AlertType.INFORMATION, "Nuevo cliente insertado y datos de reserva insertados con exito");
+                    alertNuevaPersona.showAndWait();
+                }
+                if(!nuevaPersona && !salir){
+                    entityManager.merge(persona);
+                    entityManager.persist(reservaH);
+                    Alert alertReserva = new Alert(AlertType.INFORMATION, "Datos de reserva insertados con exito");
+                    alertReserva.showAndWait();
+                }
+                
+                entityManager.getTransaction().commit();
+                
+           }
+           catch(RollbackException ex) // Los datos introducidos no cumplen los requisitos
+           {
+               Alert alertErrorEnBD = new Alert(AlertType.ERROR);
+               alertErrorEnBD.setHeaderText(" No se han podido guardar los cambios. Compruebe que los datos cumplen los requisitos");
+               alertErrorEnBD.setContentText(ex.getLocalizedMessage());
+               alertErrorEnBD.showAndWait();
+               
+           }
+           catch(IllegalArgumentException e){
+               Alert alertErrorEnBD = new Alert(AlertType.ERROR);
+               alertErrorEnBD.setHeaderText("Argumento Ilegal, No se ha podido encontrar ningun Cliente o no se ha podido crear");
+               alertErrorEnBD.setContentText(e.getLocalizedMessage());
+               alertErrorEnBD.showAndWait();
+           }
+           
+       }
     }
 
     @FXML
@@ -194,10 +450,35 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     @FXML
     private void onActionButtonLimpiar(ActionEvent event) 
     {
+        textFieldDNI.setText(null);
+        textFieldDNI.setEditable(true); // Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
         
+        textFieldNombre.setText(null);
+        textFieldNombre.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
+        
+        textFieldDireccion.setText(null);
+        textFieldDireccion.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
+        
+        textFieldLocalidad.setText(null);
+        textFieldLocalidad.setEditable(true);// Para que despues que encuentra un dni ya creado se pueda editar despues de darle al boton limpiar
+       
+        comboBoxProvincia.getSelectionModel().clearSelection();
+        comboBoxProvincia.setDisable(false);
+        
+        
+        datePickerLlegada.setValue(null);
+        datePickerSalida.setValue(null);
+        //spinnerNumHab.setVisible(false);
+        
+        comboBoxTipoHab.getSelectionModel().clearSelection();
+        checkBoxFumador.setSelected(false);
+        radioButtonAlojamiento.setSelected(false);
+        radioButtonMediaPension.setSelected(false);
+        radioButtonPensionCompleta.setSelected(false);    
     }
     
     public void setPersona(EntityManager em, Persona persona){
+        
         
         this.entityManager = em;
         this.persona = persona;
@@ -285,10 +566,18 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                         
                         
         });
+       
     }
     
+    //Comprobaciones
+    public boolean comprobarDNI(){
+        
+        Pattern patronDNI = Pattern.compile("[0-9]{8}[A-Za-z]");
+        Matcher match = patronDNI.matcher(textFieldDNI.getText());
+        
+        return match.matches();
     
-    
+    }
     
            
     

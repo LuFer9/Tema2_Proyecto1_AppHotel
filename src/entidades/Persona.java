@@ -46,16 +46,14 @@ public class Persona implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRE")
     private String nombre;
-    @Basic(optional = false)
     @Column(name = "APELLIDOS")
     private String apellidos;
     @Column(name = "DIRECCION")
     private String direccion;
     @Column(name = "LOCALIDAD")
     private String localidad;
-    @Basic(optional = false)
     @Column(name = "TELEFONO")
-    private int telefono;
+    private Integer telefono;
     @JoinColumn(name = "PROVINCIA", referencedColumnName = "NOMBRE")
     @ManyToOne
     private Provincia provincia;
@@ -71,11 +69,9 @@ public class Persona implements Serializable {
         this.dni = dni;
     }
 
-    public Persona(String dni, String nombre, String apellidos, int telefono) {
+    public Persona(String dni, String nombre) {
         this.dni = dni;
         this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.telefono = telefono;
     }
 
     public String getDni() {
@@ -118,11 +114,11 @@ public class Persona implements Serializable {
         this.localidad = localidad;
     }
 
-    public int getTelefono() {
+    public Integer getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(Integer telefono) {
         this.telefono = telefono;
     }
 

@@ -6,14 +6,18 @@
 package entidades;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,6 +36,8 @@ public class TipoHabitacion implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRE")
     private String nombre;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoHabitacion")
+    private Collection<ReservaHabitacion> reservaHabitacionCollection;
 
     public TipoHabitacion() {
     }
@@ -46,6 +52,15 @@ public class TipoHabitacion implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @XmlTransient
+    public Collection<ReservaHabitacion> getReservaHabitacionCollection() {
+        return reservaHabitacionCollection;
+    }
+
+    public void setReservaHabitacionCollection(Collection<ReservaHabitacion> reservaHabitacionCollection) {
+        this.reservaHabitacionCollection = reservaHabitacionCollection;
     }
 
     @Override
@@ -70,7 +85,7 @@ public class TipoHabitacion implements Serializable {
 
     @Override
     public String toString() {
-        return "apphotel.TipoHabitacion[ nombre=" + nombre + " ]";
+        return  nombre;
     }
     
 }

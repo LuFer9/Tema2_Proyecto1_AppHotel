@@ -6,14 +6,17 @@
 package entidades;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,6 +35,8 @@ public class TipoCocina implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRE")
     private String nombre;
+    @OneToMany(mappedBy = "tipoCocina")
+    private Collection<ReservaSalon> reservaSalonCollection;
 
     public TipoCocina() {
     }
@@ -46,6 +51,15 @@ public class TipoCocina implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @XmlTransient
+    public Collection<ReservaSalon> getReservaSalonCollection() {
+        return reservaSalonCollection;
+    }
+
+    public void setReservaSalonCollection(Collection<ReservaSalon> reservaSalonCollection) {
+        this.reservaSalonCollection = reservaSalonCollection;
     }
 
     @Override
@@ -70,7 +84,7 @@ public class TipoCocina implements Serializable {
 
     @Override
     public String toString() {
-        return "apphotel.TipoCocina[ nombre=" + nombre + " ]";
+        return "entidades.TipoCocina[ nombre=" + nombre + " ]";
     }
     
 }

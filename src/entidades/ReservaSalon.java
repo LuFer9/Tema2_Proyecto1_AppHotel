@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ReservaSalon.findByCodSalon", query = "SELECT r FROM ReservaSalon r WHERE r.codSalon = :codSalon"),
     @NamedQuery(name = "ReservaSalon.findByTipoEvento", query = "SELECT r FROM ReservaSalon r WHERE r.tipoEvento = :tipoEvento"),
     @NamedQuery(name = "ReservaSalon.findByNumPersonas", query = "SELECT r FROM ReservaSalon r WHERE r.numPersonas = :numPersonas"),
-    @NamedQuery(name = "ReservaSalon.findByTipoCocina", query = "SELECT r FROM ReservaSalon r WHERE r.tipoCocina = :tipoCocina"),
     @NamedQuery(name = "ReservaSalon.findByFechaEvento", query = "SELECT r FROM ReservaSalon r WHERE r.fechaEvento = :fechaEvento"),
     @NamedQuery(name = "ReservaSalon.findByHabitaciones", query = "SELECT r FROM ReservaSalon r WHERE r.habitaciones = :habitaciones"),
     @NamedQuery(name = "ReservaSalon.findByNumHabitaciones", query = "SELECT r FROM ReservaSalon r WHERE r.numHabitaciones = :numHabitaciones"),
@@ -53,8 +52,6 @@ public class ReservaSalon implements Serializable {
     @Basic(optional = false)
     @Column(name = "NUM_PERSONAS")
     private int numPersonas;
-    @Column(name = "TIPO_COCINA")
-    private String tipoCocina;
     @Basic(optional = false)
     @Column(name = "FECHA_EVENTO")
     @Temporal(TemporalType.DATE)
@@ -68,6 +65,9 @@ public class ReservaSalon implements Serializable {
     @JoinColumn(name = "DNI_CLIENTE", referencedColumnName = "DNI")
     @ManyToOne(optional = false)
     private Persona dniCliente;
+    @JoinColumn(name = "TIPO_COCINA", referencedColumnName = "NOMBRE")
+    @ManyToOne
+    private TipoCocina tipoCocina;
 
     public ReservaSalon() {
     }
@@ -105,14 +105,6 @@ public class ReservaSalon implements Serializable {
 
     public void setNumPersonas(int numPersonas) {
         this.numPersonas = numPersonas;
-    }
-
-    public String getTipoCocina() {
-        return tipoCocina;
-    }
-
-    public void setTipoCocina(String tipoCocina) {
-        this.tipoCocina = tipoCocina;
     }
 
     public Date getFechaEvento() {
@@ -153,6 +145,14 @@ public class ReservaSalon implements Serializable {
 
     public void setDniCliente(Persona dniCliente) {
         this.dniCliente = dniCliente;
+    }
+
+    public TipoCocina getTipoCocina() {
+        return tipoCocina;
+    }
+
+    public void setTipoCocina(TipoCocina tipoCocina) {
+        this.tipoCocina = tipoCocina;
     }
 
     @Override
