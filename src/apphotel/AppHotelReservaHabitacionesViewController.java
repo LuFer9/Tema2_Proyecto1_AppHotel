@@ -157,7 +157,10 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                     }
                     catch(NullPointerException e){
                         
-                        System.out.println("No existe ninguna persona con ese DNI");
+                        if(textFieldDNI.getText().equals("")){
+                            
+                        }
+                        
                     }
                 }
             });
