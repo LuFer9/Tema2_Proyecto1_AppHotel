@@ -8,6 +8,7 @@ package apphotel;
 import entidades.Persona;
 import entidades.Provincia;
 import entidades.ReservaHabitacion;
+import entidades.TipoHabitacion;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -29,7 +30,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -63,7 +63,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     @FXML
     private Spinner<Integer> spinnerNumHab;
     @FXML
-    private ComboBox<ReservaHabitacion> comboBoxTipoHab;
+    private ComboBox<TipoHabitacion> comboBoxTipoHab;
     @FXML
     private CheckBox checkBoxFumador;
     @FXML
@@ -100,59 +100,71 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                 }
                 else{
                     
-                    persona = new Persona();
+                   
+                    try{    
                     
-                    persona = entityManager.find(Persona.class, textFieldDNI.getText());
-                    
-                    textFieldNombre.setText(persona.getNombre());
-                    textFieldDireccion.setText(persona.getDireccion());
-                    textFieldLocalidad.setText(persona.getLocalidad());
-                    
-                    //Provincia consulta para combo box
-                    Query queryProvincialFindAll = entityManager.createNamedQuery("Provincia.findAll");
-                    List listProvincia = queryProvincialFindAll.getResultList();
-                    comboBoxProvincia.setItems(FXCollections.observableList(listProvincia));
-                    
-                    if(persona.getProvincia() != null){
-                        
-                        comboBoxProvincia.setValue(persona.getProvincia());
-                    }
-                    
-                    //Determinamos como se muestran los datos de provincia en este caso CADIZ, nombre
-                    comboBoxProvincia.setCellFactory(
-                            (ListView<Provincia> l)-> new ListCell<Provincia>(){
-                                @Override
-                                protected void updateItem(Provincia provincia, boolean empty){
-                                    super.updateItem(provincia, empty);
-                                    if (provincia == null || empty){
-                                        setText("");
-                                    } else {
-                                        setText(provincia.getNombre());
-                                    }
-                                }
-                            });  
-                    
-                    //Determinamos como se muestra el comboBox cuando no se este seleccionando nada de su lista
-                    comboBoxProvincia.setConverter(new StringConverter<Provincia>(){
-                        @Override
-                        public String toString(Provincia provincia) {
-                            if(provincia == null){
-                                return "";
-                            }
-                            else{
-                               return provincia.getNombre();
-                            }
+                        persona = entityManager.find(Persona.class, textFieldDNI.getText());
+
+
+                        textFieldNombre.setText(persona.getNombre());
+                        textFieldDireccion.setText(persona.getDireccion());
+                        textFieldLocalidad.setText(persona.getLocalidad());
+
+                        //Provincia consulta para combo box
+                        Query queryProvincialFindAll = entityManager.createNamedQuery("Provincia.findAll");
+                        List listProvincia = queryProvincialFindAll.getResultList();
+                        comboBoxProvincia.setItems(FXCollections.observableList(listProvincia));
+
+                        if(persona.getProvincia() != null){
+
+                            comboBoxProvincia.setValue(persona.getProvincia());
                         }
 
-                        @Override
-                        public Provincia fromString(String string) {
-                            return null;
+                        //Determinamos como se muestran los datos de provincia en este caso CADIZ, nombre
+                        comboBoxProvincia.setCellFactory(
+                                (ListView<Provincia> l)-> new ListCell<Provincia>(){
+                                    @Override
+                                    protected void updateItem(Provincia provincia, boolean empty){
+                                        super.updateItem(provincia, empty);
+                                        if (provincia == null || empty){
+                                            setText("");
+                                        } else {
+                                            setText(provincia.getNombre());
+                                        }
+                                    }
+                                });  
+
+                        //Determinamos como se muestra el comboBox cuando no se este seleccionando nada de su lista
+                        comboBoxProvincia.setConverter(new StringConverter<Provincia>(){
+                            @Override
+                            public String toString(Provincia provincia) {
+                                if(provincia == null){
+                                    return "";
+                                }
+                                else{
+                                   return provincia.getNombre();
+                                }
+                            }
+
+                            @Override
+                            public Provincia fromString(String string) {
+                                return null;
+                            }
+
+
+                        });
+                        
+                    }
+                    catch(NullPointerException e){
+                        
+                        if(textFieldDNI.getText().equals("")){
+                            
                         }
                         
-                        
-                    });
+                    }
                 }
             });
+        
           
     }    
     
@@ -185,14 +197,100 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         
     }
     
-    public void setPersona(EntityManager em){
+    public void setPersona(EntityManager em, Persona persona){
         
         this.entityManager = em;
+        this.persona = persona;
     }
     
     
     public void mostrarDatos(){
         
+        //Provincia consulta para combo box
+        Query queryProvincialFindAll = entityManager.createNamedQuery("Provincia.findAll");
+        List listProvincia = queryProvincialFindAll.getResultList();
+        comboBoxProvincia.setItems(FXCollections.observableList(listProvincia));
+                    
+        //Determinamos como se muestran los datos de provincia en este caso CADIZ, nombre
+        comboBoxProvincia.setCellFactory(
+                (ListView<Provincia> l)-> new ListCell<Provincia>(){
+            @Override
+            protected void updateItem(Provincia provincia, boolean empty){
+                super.updateItem(provincia, empty);
+                if (provincia == null || empty){
+                    setText("");
+                } else {
+                    setText(provincia.getNombre());
+                }
+            }
+        });  
+                    
+        //Determinamos como se muestra el comboBox cuando no se este seleccionando nada de su lista
+        comboBoxProvincia.setConverter(new StringConverter<Provincia>(){
+        @Override
+            public String toString(Provincia provincia) {
+                if(provincia == null){
+                    return "";
+                }
+                else{
+                return provincia.getNombre();
+                }
+            }
+
+            @Override
+            public Provincia fromString(String string) {
+                return null;
+            }
+                        
+                        
+        });
+        
+        
+        //Mostramos los tipos de habitaciones
+        //Provincia consulta para combo box
+        Query queryTipoHabitacionFindAll = entityManager.createNamedQuery("TipoHabitacion.findAll");
+        List listHabitacion = queryTipoHabitacionFindAll.getResultList();
+        comboBoxTipoHab.setItems(FXCollections.observableList(listHabitacion));
+                    
+        //Determinamos como se muestran los datos de provincia en este caso CADIZ, nombre
+        comboBoxTipoHab.setCellFactory(
+                (ListView<TipoHabitacion> l)-> new ListCell<TipoHabitacion>(){
+            @Override
+            protected void updateItem(TipoHabitacion tipoHab, boolean empty){
+                super.updateItem(tipoHab, empty);
+                if (tipoHab == null || empty){
+                    setText("");
+                } else {
+                    setText(tipoHab.getNombre());
+                }
+            }
+        });  
+                    
+        //Determinamos como se muestra el comboBox cuando no se este seleccionando nada de su lista
+        comboBoxTipoHab.setConverter(new StringConverter<TipoHabitacion>(){
+        @Override
+            public String toString(TipoHabitacion tipoHab) {
+                if(tipoHab == null){
+                    return "";
+                }
+                else{
+                return tipoHab.getNombre();
+                }
+            }
+
+            @Override
+            public TipoHabitacion fromString(String string) {
+                return null;
+            }
+                        
+                        
+        });
     }
+    
+    
+    
+    
+           
+    
      
 }
