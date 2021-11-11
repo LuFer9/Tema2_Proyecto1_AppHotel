@@ -101,7 +101,6 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     private AnchorPane viewReservaHabitacion;
     private boolean nuevaPersona;
     private boolean insertado;
-    private boolean salir;
     
     public static final String ALOJAMIENTOYDESAYUNO = "ALOJAMIENTO Y DESAYUNO";
     public static final String MEDIAPENSION = "MEDIA PENSION";
@@ -191,13 +190,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                         nuevaPersona = true;
                         System.out.println("ola nueva persona");
                         LimpiarDatos();
-                                
-                        if(textFieldDNI.getText().equals("")){
-                           
-                        }
-                        else{
-                            
-                        }
+                       
                         
                     }
                 }
@@ -217,17 +210,15 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         boolean errorFormato = false;
         reservaH = new ReservaHabitacion();
         tipoHabitacion = new TipoHabitacion();
-        Alert alert = new Alert(AlertType.ERROR);
+        Alert alert;
         String cadenaAlert = "";
-        salir = false;
+        int codError = 0;
         
         if(nuevaPersona){
             persona = new Persona();
         }
             
         //Actualizamos los datos de la persona en cuestion
-       if(!salir)
-       {
            try
            {
                 
@@ -241,141 +232,181 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                 }
                 else{
                     errorFormato = true;
-                    cadenaAlert += "DNI no valido\n";
-                    textFieldDNI.requestFocus();
-                }
-                
-                //Comprobacion nombre
-                if(textFieldNombre.getText().length() > 2 && textFieldNombre.getText().length() <= 20){
+                    codError = 1;
                     
-                    persona.setNombre(textFieldNombre.getText());
-                }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Nombre no valido\n";
-                    textFieldNombre.requestFocus();
+               
                 }
                 
-                //Comprobacion direccion
-                if(textFieldDireccion.getText().length() > 5 && textFieldDireccion.getText().length() <= 50){
+                if(!errorFormato){
                     
-                    persona.setDireccion(textFieldDireccion.getText());
-                }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Direccion no valida\n";
-                    textFieldDireccion.requestFocus();
-                }
-                
-                //Comprobacion localidad
-                if(textFieldLocalidad.getText().length() > 3 && textFieldLocalidad.getText().length() <= 20){
-                    
-                    persona.setLocalidad(textFieldLocalidad.getText());
-                }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Localidad no valida\n";
-                    textFieldLocalidad.requestFocus();
-                }
-                
-                //Comprobacion provincia
-                if(comboBoxProvincia.getValue() != null){
-                    
-                    persona.setProvincia(comboBoxProvincia.getValue());
-                }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Debes selccionar una provincia\n";
-                   
-                }
-                
-                
-                
-                
-                //Comprobacion regimen
-                if(radioButtonAlojamiento.isSelected()){
-                    reservaH.setRegimen(ALOJAMIENTOYDESAYUNO);
-                }
-                else if(radioButtonMediaPension.isSelected()){
-                    reservaH.setRegimen(MEDIAPENSION);
-                }
-                else if(radioButtonPensionCompleta.isSelected()){
-                    reservaH.setRegimen(PENSIONCOMPLETA);
-                }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Debes seleccionar un régimen\n";
-                    
-                }
-                
-                //Comprobacion tipo habitacion
-                if(comboBoxTipoHab.getValue() != null){
-                    
-                    try{
-                        Query queryFindTipoHab = entityManager.createNamedQuery("TipoHabitacion.findByNombre");
-                        queryFindTipoHab.setParameter("nombre", comboBoxTipoHab.getValue().toString());
-                        tipoHabitacion = (TipoHabitacion) queryFindTipoHab.getSingleResult();
-                        
-                        
-                        reservaH.setTipoHabitacion(tipoHabitacion);
+                    //Comprobacion nombre
+                    if(comprobarNombre()){
+
+                        persona.setNombre(textFieldNombre.getText());
                     }
-                    catch(NoResultException e){
-                        
+                    else{
+                        errorFormato = true;
+                        codError = 2;
+                 
+                    }
+                    
+                }
+                
+                if(!errorFormato){
+                    //Comprobacion direccion
+                    if(comprobarDireccion()){
+
+                        persona.setDireccion(textFieldDireccion.getText());
+                    }
+                    else{
+                        errorFormato = true;
+                        codError = 3;
+                    }
+                    
+                }
+            
+                if(!errorFormato){
+                    //Comprobacion localidad
+                    if(comprobarLocalidad()){
+
+                        persona.setLocalidad(textFieldLocalidad.getText());
+                    }
+                    else{
+                        errorFormato = true;
+                        codError = 4;
+           
+                    }
+                    
+                }
+             
+                
+                if(!errorFormato){
+                     //Comprobacion provincia
+                    if(comboBoxProvincia.getValue() != null){
+
+                        persona.setProvincia(comboBoxProvincia.getValue());
+                    }
+                    else{
+                        errorFormato = true;
+                        codError = 5;
+
+
+
+                    }
+                    
+                }
+           
+   
+                
+                if(!errorFormato){
+                     //Comprobacion regimen
+                    if(radioButtonAlojamiento.isSelected()){
+                        reservaH.setRegimen(ALOJAMIENTOYDESAYUNO);
+                    }
+                    else if(radioButtonMediaPension.isSelected()){
+                        reservaH.setRegimen(MEDIAPENSION);
+                    }
+                    else if(radioButtonPensionCompleta.isSelected()){
+                        reservaH.setRegimen(PENSIONCOMPLETA);
+                    }
+                    else{
+
+                        errorFormato = true;
+                        codError = 6;
+                         
                     }
                 }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Debes seleccionar un tipo habitación\n";
-                  
-                }
-                
-                //Comprobacion fechas
-                //Fechas
-                if (datePickerLlegada.getValue() != null){
                     
-                    LocalDate localDate = datePickerLlegada.getValue();
-                    ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
-                    Instant instant = zonedDateTime.toInstant();
-                    Date date = Date.from(instant);
-                    reservaH.setFechaLlegada(date);
+                if(!errorFormato){
+                    
+                    //Comprobacion tipo habitacion
+                    if(comboBoxTipoHab.getValue() != null){
+
+                        try{
+                            Query queryFindTipoHab = entityManager.createNamedQuery("TipoHabitacion.findByNombre");
+                            queryFindTipoHab.setParameter("nombre", comboBoxTipoHab.getValue().toString());
+                            tipoHabitacion = (TipoHabitacion) queryFindTipoHab.getSingleResult();
+
+
+                            reservaH.setTipoHabitacion(tipoHabitacion);
+                        }
+                        catch(NoResultException e){
+
+                        }
+                    }
+                    else{
+                        codError = 7;
+                        errorFormato = true;
+
+
+                    }
                 }
-                else {
-                    errorFormato = true;
-                    cadenaAlert += "Debes seleccionar la fecha de llegada\n";
+
+                
+                if(!errorFormato){
+                     //Comprobacion fechas
+                    //Fechas
+                    if (datePickerLlegada.getValue() != null){
+
+                        LocalDate localDate = datePickerLlegada.getValue();
+                        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+                        Instant instant = zonedDateTime.toInstant();
+                        Date date = Date.from(instant);
+                        reservaH.setFechaLlegada(date);
+                    }
+                    else {
+                        errorFormato = true;
+                        codError = 8;
+
+
+                    }     
                     
                 }
                 
                 
-                if(datePickerSalida.getValue() != null){
+                if(!errorFormato){
+                    
+                
+                    if(datePickerSalida.getValue() != null){
                     LocalDate localDate = datePickerSalida.getValue();
                     ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
                     Instant instant = zonedDateTime.toInstant();
                     Date date = Date.from(instant);
                     reservaH.setFechaSalida(date);
-                }
-                else {
-                    errorFormato = true;
-                    cadenaAlert += "Debes seleccionar la fecha de salida\n";
-                    
-                }
-                
-                
-                //comprobamos si las fechas son iguales
-                if(datePickerSalida.getValue() != null && datePickerLlegada.getValue() != null){
-                    
-                    if(datePickerSalida.getValue().equals(datePickerLlegada.getValue())){
-                    errorFormato = true;
-                    cadenaAlert += "Debes seleccionar fechas de llegada y salida que no sean el mismo dia\n";
-                    
                     }
-                    //Comprobamos si las fecha de llegada es mayor que la de salida
-                    if(datePickerLlegada.getValue().isAfter(datePickerSalida.getValue())){
-                        errorFormato = true;     
-                        cadenaAlert += "Debes seleccionar fechas de llegada y salida coherentes\n";
+                    else {
+                        errorFormato = true;
+                        codError = 9;
+
 
                     }
                     
                 }
+                
+                
+                if(!errorFormato){
+                    
+                    //comprobamos si las fechas son iguales
+                    if(datePickerSalida.getValue() != null && datePickerLlegada.getValue() != null){
+
+                        if(datePickerSalida.getValue().equals(datePickerLlegada.getValue())){
+                        errorFormato = true;
+                        codError = 10;
+
+
+                        }
+                        //Comprobamos si las fecha de llegada es mayor que la de salida
+                        if(datePickerLlegada.getValue().isAfter(datePickerSalida.getValue())){
+                            errorFormato = true;     
+                            codError = 11;
+
+
+                        }
+
+                    }
+                    
+                }
+             
                 
                 //Comprobacion numero habitaciones
                 reservaH.setNumeroHabitaciones(spinnerNumHab.getValue());
@@ -388,12 +419,75 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                     reservaH.setFumador(false);
                 }
                 
+                //si telefono esta a null se pondra el valor a 0
+                if(persona.getTelefono() == null){
+                   persona.setTelefono(0);
+                }
+                
+                //Si apellido es null se pondra como vacio
+                if(persona.getApellidos() == null){
+                    persona.setApellidos("Vacío");
+                }
+                
                 //En caso de que haya algun error de formato mostramos los fallos
                 if(errorFormato){
-                  alert.setContentText(cadenaAlert);
-                  alert.showAndWait();
-                  salir = true;
+                    
+                    switch(codError){
+                    case 1: 
+                        cadenaAlert = " DNI no valido ";
+                        textFieldDNI.requestFocus();
+                        break;
+                    case 2:
+                        cadenaAlert = " Campo nombre no valido";
+                        textFieldNombre.requestFocus();
+                        break;
+                    case 3:
+                        cadenaAlert=" Campo direccion no valido ";
+                        textFieldDireccion.requestFocus();
+                        break;
+                    case 4:
+                        cadenaAlert="Tienes que rellenar el campo localidad";
+                        textFieldLocalidad.requestFocus();
+                        break;
+
+                    case 5:
+                        cadenaAlert="Debe indicar una provincia";
+                        comboBoxProvincia.requestFocus();
+                        break;
+
+                    case 6:
+                        cadenaAlert="Debes seleccionar un régimen";
+                        
+                        break;
+
+                    case 7:
+                        cadenaAlert = "Debes seleccionar un tipo habitación";
+                        break;
+                        
+                    case 8:
+                        cadenaAlert="Debes de poner fechas de llegada";
+                        datePickerLlegada.requestFocus();
+                        break;
+                        
+                    case 9:
+                        cadenaAlert = "Debe indicar una fecha de salida";
+                        datePickerSalida.requestFocus();
+                        break;
+                        
+                    case 10:
+                        cadenaAlert = "Debes seleccionar fechas de llegada y salida que no sean el mismo dia";  
+                        break;
+
+                    case 11:
+                        cadenaAlert ="Debes seleccionar fechas de llegada y salida coherentes";                   
+                        break;
+                        
                 }
+                 alert = new Alert(AlertType.ERROR, cadenaAlert);
+                 alert.showAndWait();
+                   
+                }
+                 
                 
                  
                 
@@ -401,7 +495,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                 
                 //Insertamos en la base de datos
                 
-                if(nuevaPersona && !salir){
+                if(nuevaPersona && !errorFormato){
                     //Iniciamos de nuevo la transaccion
                     entityManager.getTransaction().begin();
                     
@@ -411,7 +505,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                     alertNuevaPersona.showAndWait();
                     entityManager.getTransaction().commit();
                 }
-                if(!nuevaPersona && !salir){
+                if(!nuevaPersona && !errorFormato){
                     //Iniciamos de nuevo la transaccion
                     entityManager.getTransaction().begin();
                     
@@ -422,6 +516,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                     entityManager.getTransaction().commit();
                 }          
                 
+             
            }
            catch(RollbackException ex) // Los datos introducidos no cumplen los requisitos
            {
@@ -439,7 +534,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                
            }
            
-       }
+       
     }
 
     @FXML
@@ -584,6 +679,27 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         
         return match.matches();
     
+    }
+    
+    public boolean comprobarNombre(){
+        Pattern patronNombre = Pattern.compile("[A-Za-z]{2,20}");
+        Matcher match = patronNombre.matcher(textFieldNombre.getText());
+      
+        return match.matches();
+    }
+    
+     public boolean comprobarDireccion(){
+        Pattern patronDireccion = Pattern.compile("[A-Za-z]{5,50}");
+        Matcher match = patronDireccion.matcher(textFieldDireccion.getText());
+      
+        return match.matches();
+    }
+     
+    public boolean comprobarLocalidad(){
+        Pattern patronLocalidad = Pattern.compile("[A-Za-z]{3,20}");
+        Matcher match = patronLocalidad.matcher(textFieldLocalidad.getText());
+      
+        return match.matches();
     }
     
     public void LimpiarDatos(){

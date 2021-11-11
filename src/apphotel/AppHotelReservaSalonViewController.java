@@ -148,11 +148,11 @@ public class AppHotelReservaSalonViewController implements Initializable {
                         textFieldDireccion.setText(persona.getDireccion());
                         textFieldDireccion.setEditable(false);
                         textFieldTelefono.setText(String.valueOf(persona.getTelefono()));
-                        if(textFieldTelefono.getText() != null){
+                        if(persona.getTelefono() != 0){
                             textFieldTelefono.setEditable(false);
                         }
                         else
-                            textFieldTelefono.setEditable(false);
+                            textFieldTelefono.setEditable(true);
    
                         
                     }
@@ -292,18 +292,19 @@ public class AppHotelReservaSalonViewController implements Initializable {
         boolean errorFormato = false;
         reservaSalon = new ReservaSalon();
         tipoCocina = new TipoCocina();
-        Alert alert = new Alert(AlertType.ERROR);
+        Alert alert;
         String cadenaAlert = "";
-        salir = false;
+        int codError = 0;
         
         if(nuevaPersona){
             persona = new Persona();
         }
         
         //Actualizmaos los datos de la persona
-        if(!salir){
+        
             
             try{
+                
                 
                 if(comprobarDNI()){
                     
@@ -312,98 +313,126 @@ public class AppHotelReservaSalonViewController implements Initializable {
                     reservaSalon.setDniCliente(persona);
                 }else{
                     errorFormato = true;
-                    cadenaAlert += "DNI no valido\n";
-                    textFieldDNI.requestFocus();
+                    codError = 1;
+
                 }
                 
-                //Comprobacion nombre
-                if(textFieldNombre.getText().length() > 2 && textFieldNombre.getText().length() <= 20){
-                    
-                    persona.setNombre(textFieldNombre.getText());
-                }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Nombre no valido\n";
-                    textFieldNombre.requestFocus();
-                }
-                
-                //Comprobacion direccion
-                if(textFieldDireccion.getText().length() > 5 && textFieldDireccion.getText().length() <= 50){
-                    
-                    persona.setDireccion(textFieldDireccion.getText());
-                }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Direccion no valida\n";
-                    textFieldDireccion.requestFocus();
-                }
-                
-                //Comprobacion de telefono
-                if(!textFieldTelefono.getText().isEmpty() && comprobarTelefono()){
-                    
-                    try{
-                        persona.setTelefono(Integer.valueOf(textFieldTelefono.getText()));
+                if(!errorFormato){
+                    //Comprobacion nombre
+                    if(comprobarNombre()){
+
+                        persona.setNombre(textFieldNombre.getText());
                     }
-                    catch(NumberFormatException ex){
+                    else{
                         errorFormato = true;
-                        cadenaAlert += "Telefono no valido\n";
-                        textFieldTelefono.requestFocus();
+                        codError = 2;
+                    }
+
+                }
+     
+                
+                if(!errorFormato){
+                    
+                    //Comprobacion direccion
+                    if(comprobarDireccion()){
+
+                        persona.setDireccion(textFieldDireccion.getText());
+                    }
+                    else{
+                        errorFormato = true;
+                        codError = 3;
+
                     }
                 }
-                else{
-                    errorFormato = true;
-                    cadenaAlert += "Telefono no valido\n";
-                    textFieldTelefono.requestFocus();
+                
+                
+                if(!errorFormato){
+                     //Comprobacion de telefono
+                    if(comprobarTelefono()){
+
+                        try{
+                            persona.setTelefono(Integer.valueOf(textFieldTelefono.getText()));
+                        }
+                        catch(NumberFormatException ex){
+                            errorFormato = true;
+                            codError = 4;
+
+                        }
+                    }
+                    else{
+                        errorFormato = true;
+                        codError = 5;
+
+                    }
                 }
+                
+              
                 
                 //comprobacion de radioButtons
                 //Comprobacion radioButton banquete
                 if(RadioButtonBanquete.isSelected()){
                     
                     reservaSalon.setTipoEvento(BANQUETE);
-                    //Numero de personas
-                    if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 100){
+                    
+                    if(!errorFormato){
                         
-                        reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
-                    }
-                    else{
-                        errorFormato = true;
-                        cadenaAlert += "Numero de personas no valido\n";
-                        textFieldNumPersonas.requestFocus();
-                    }
-                    
-                    //Comprobacion tipo Cocina comboBox
-                    if(ComboBoxCocina.getValue() != null){
+                        //Numero de personas
+                        if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 100){
+
+                            reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                        }
+                        else{
+                            errorFormato = true;
+                            codError = 6;
+
+                        }
                         
-                        try{
-                            Query queryFindTipoHab = entityManager.createNamedQuery("TipoCocina.findByNombre");
-                            queryFindTipoHab.setParameter("nombre", ComboBoxCocina.getValue().toString());
-                            tipoCocina = (TipoCocina) queryFindTipoHab.getSingleResult();
-                            
-                            reservaSalon.setTipoCocina(tipoCocina);
-                        }
-                        catch(NoResultException e){
-                            
-                        }
-                    }
-                    else{
-                        errorFormato = true;
-                        cadenaAlert += "Debes seleccionar un tipo cocina\n";
                     }
                     
-                    //Controlamos la fecha del evento
-                    if(datePickerFechaEvento.getValue() != null){
-                        LocalDate localDate = datePickerFechaEvento.getValue();
-                        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
-                        Instant instant = zonedDateTime.toInstant();
-                        Date date = Date.from(instant);
-                        reservaSalon.setFechaEvento(date);
-                    }
-                    else {
-                        errorFormato = true;
-                        cadenaAlert += "Debes seleccionar la fecha de llegada\n";
                     
+                    if(!errorFormato){
+                        
+                        //Comprobacion tipo Cocina comboBox
+                        if(ComboBoxCocina.getValue() != null){
+
+                            try{
+                                Query queryFindTipoHab = entityManager.createNamedQuery("TipoCocina.findByNombre");
+                                queryFindTipoHab.setParameter("nombre", ComboBoxCocina.getValue().toString());
+                                tipoCocina = (TipoCocina) queryFindTipoHab.getSingleResult();
+
+                                reservaSalon.setTipoCocina(tipoCocina);
+                            }
+                            catch(NoResultException e){
+
+                            }
+                        }
+                        else{
+                            errorFormato = true;
+                            codError = 7;
+
+                        }
+                        
                     }
+   
+                    
+                    if(!errorFormato){
+                        
+                        //Controlamos la fecha del evento
+                        if(datePickerFechaEvento.getValue() != null){
+                            LocalDate localDate = datePickerFechaEvento.getValue();
+                            ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+                            Instant instant = zonedDateTime.toInstant();
+                            Date date = Date.from(instant);
+                            reservaSalon.setFechaEvento(date);
+                        }
+                        else {
+                            errorFormato = true;
+                            codError = 8;
+
+                        }
+                        
+                    }
+                    
                     
                 }
                 
@@ -412,30 +441,38 @@ public class AppHotelReservaSalonViewController implements Initializable {
                     
                     reservaSalon.setTipoEvento(JORNADA);
                     
-                    //Numero de personas
-                    if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 50){
+                    if(!errorFormato){
                         
-                        reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
-                    }
-                    else{
-                        errorFormato = true;
-                        cadenaAlert += "Numero de personas no valido\n";
-                        textFieldNumPersonas.requestFocus();
+                        //Numero de personas
+                        if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 50){
+
+                            reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                        }
+                        else{
+                            errorFormato = true;
+                            codError = 6;
+                        }
+                        
                     }
                     
-                    //Controlamos la fecha del evento
-                    if(datePickerFechaEvento.getValue() != null){
-                        LocalDate localDate = datePickerFechaEvento.getValue();
-                        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
-                        Instant instant = zonedDateTime.toInstant();
-                        Date date = Date.from(instant);
-                        reservaSalon.setFechaEvento(date);
-                    }
-                    else {
-                        errorFormato = true;
-                        cadenaAlert += "Debes seleccionar la fecha de llegada\n";
                     
+                    if(!errorFormato){
+                        
+                        //Controlamos la fecha del evento
+                        if(datePickerFechaEvento.getValue() != null){
+                            LocalDate localDate = datePickerFechaEvento.getValue();
+                            ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+                            Instant instant = zonedDateTime.toInstant();
+                            Date date = Date.from(instant);
+                            reservaSalon.setFechaEvento(date);
+                        }
+                        else {
+                            errorFormato = true;
+                            codError = 8;
+
+                        }
                     }
+                   
                 }
                 
                 //radioButton congreso
@@ -443,94 +480,196 @@ public class AppHotelReservaSalonViewController implements Initializable {
                    
                    reservaSalon.setTipoEvento(CONGRESO);
                    
-                   //Numero de personas
-                    if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 50){
-                        
-                        reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
-                    }
-                    else{
-                        errorFormato = true;
-                        cadenaAlert += "Numero de personas no valido\n";
-                        textFieldNumPersonas.requestFocus();
-                    }
-                    
-                    //Controlamos la fecha del evento
-                    if(datePickerFechaEvento.getValue() != null){
-                        LocalDate localDate = datePickerFechaEvento.getValue();
-                        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
-                        Instant instant = zonedDateTime.toInstant();
-                        Date date = Date.from(instant);
-                        reservaSalon.setFechaEvento(date);
-                    }
-                    else {
-                        errorFormato = true;
-                        cadenaAlert += "Debes seleccionar la fecha de llegada\n";
-                    
-                    }
-                    
-                    //Comprobacion habitaciones y cuantas
-                    if(checkBoxhabitaciones.isSelected()){
-                        
-                        reservaSalon.setHabitaciones(true);
-                        textFieldCantidadHabitaciones.setEditable(true);
-                        
-                        if(textFieldCantidadHabitaciones.getText() != null){
-                            
-                            try{
-                                reservaSalon.setNumHabitaciones(Integer.valueOf(textFieldCantidadHabitaciones.getText()));                             
-                            }
-                            catch(NumberFormatException ex){
-                                errorFormato = true;
-                                cadenaAlert += "Debes introducir un numero en cantidad de habitaciones\n";
-                            }
-                            
+                   if(!errorFormato){
+                       
+                       //Numero de personas
+                        if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 50){
+
+                            reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
                         }
                         else{
                             errorFormato = true;
-                            cadenaAlert += "Cantidad de habitaciones debe ser rellenado\n"; 
+                            codError = 6;
                         }
-                    }
-                    else{
-                        reservaSalon.setHabitaciones(false);
-                        textFieldCantidadHabitaciones.setEditable(false);
-                    }
-                    
-                     //Numero de dias
-                    if(textFieldNumDias.getText() != null && Integer.valueOf(textFieldNumDias.getText()) > 1 && Integer.valueOf(textFieldNumDias.getText()) < 10){
+                       
+                   }
+                   
+                    if(!errorFormato){
                         
-                        try{
-                            reservaSalon.setNumDias(Integer.valueOf(textFieldNumDias.getText()));
+                        //Controlamos la fecha del evento
+                        if(datePickerFechaEvento.getValue() != null){
+                            LocalDate localDate = datePickerFechaEvento.getValue();
+                            ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+                            Instant instant = zonedDateTime.toInstant();
+                            Date date = Date.from(instant);
+                            reservaSalon.setFechaEvento(date);
                         }
-                        catch(NumberFormatException ex){
+                        else {
                             errorFormato = true;
-                            cadenaAlert += "numero de dias no es un numero\n";
-                            textFieldNumDias.requestFocus();
+                            codError = 8;
+
+                        }
+                    }
+                   
+                    
+                    if(!errorFormato){
+                        
+                        //Comprobacion habitaciones y cuantas
+                        if(checkBoxhabitaciones.isSelected()){
+
+                            reservaSalon.setHabitaciones(true);
+                            textFieldCantidadHabitaciones.setEditable(true);
+
+                            if(textFieldCantidadHabitaciones.getText() != null){
+
+                                try{
+                                    reservaSalon.setNumHabitaciones(Integer.valueOf(textFieldCantidadHabitaciones.getText()));                             
+                                }
+                                catch(NumberFormatException ex){
+                                    errorFormato = true;
+                                    codError = 9;
+                                }
+
+                            }
+                            else{
+                                errorFormato = true; 
+                                codError = 10;
+                            }
+                        }
+                        else{
+                            reservaSalon.setHabitaciones(false);
+                            textFieldCantidadHabitaciones.setEditable(false);
+                        }
+
+                    }
+                    
+                    if(!errorFormato){
+                        
+                          //Numero de dias
+                        if(textFieldNumDias.getText() != null && Integer.valueOf(textFieldNumDias.getText()) > 1 && Integer.valueOf(textFieldNumDias.getText()) < 10){
+
+                            try{
+                                reservaSalon.setNumDias(Integer.valueOf(textFieldNumDias.getText()));
+                            }
+                            catch(NumberFormatException ex){
+                                errorFormato = true;
+                                codError = 11;
+                            }
+
+                        }
+                        else{
+                             errorFormato = true;
+                             codError = 12;
                         }
                         
                     }
-                    else{
-                         errorFormato = true;
-                         cadenaAlert += "numero de dias invalido\n";
-                         textFieldNumDias.requestFocus();
-                    }
-                    
-                    
-                    
+                     
+                                
                     
                }
                
-               if(!RadioButtonCongreso.isSelected() && !RadioButtonJornada.isSelected() && !RadioButtonBanquete.isSelected()){
-                   errorFormato = true;
-                   cadenaAlert += "No has elegido ningun tipo de evento, porfavor elige uno.\n";
+               if(!errorFormato){
+                   
+                    if(!RadioButtonCongreso.isSelected() && !RadioButtonJornada.isSelected() && !RadioButtonBanquete.isSelected()){
+                        errorFormato = true;
+                        codError = 13;
+                   }
                }
                
-               if(errorFormato){
-                  alert.setContentText(cadenaAlert);
-                  alert.showAndWait();
-                  salir = true;
+               //si provincia esta a null se setea un valor por defecto
+               if(persona.getProvincia() == null){
+                   Provincia provincia = new Provincia();
+                   Query queryFindProvincia = entityManager.createNamedQuery("Provincia.findByNombre");
+                   queryFindProvincia.setParameter("nombre", "SIN PROVINCIA");
+                   provincia = (Provincia) queryFindProvincia.getSingleResult();
+                   persona.setProvincia(provincia);
                }
                
-               if(nuevaPersona && !salir){
+               //Si localidad esta null se seteara un valor por defecto
+               if(persona.getLocalidad() == null){
+                  persona.setLocalidad("SIN LOCALIDAD");
+               }
+               
+               //Si apellido es null se pondra como vacio
+               if(persona.getApellidos() == null){
+                    persona.setApellidos("Vacío");
+                }
+        
+               
+               //En caso de que haya algun error de formato mostramos los fallos
+                if(errorFormato){
+                    
+                    switch(codError){
+                    case 1: 
+                        cadenaAlert = " DNI no valido ";
+                        textFieldDNI.requestFocus();
+                        break;
+                    case 2:
+                        cadenaAlert = " Campo nombre no valido";
+                        textFieldNombre.requestFocus();
+                        break;
+                    case 3:
+                        cadenaAlert=" Campo direccion no valido ";
+                        textFieldDireccion.requestFocus();
+                        break;
+                    case 4:
+                        cadenaAlert="Tienes que rellenar el campo telefono, y deben ser solo numeros";
+                        textFieldTelefono.requestFocus();
+                        break;
+
+                    case 5:
+                        cadenaAlert="Tienes que rellenar el campo telefono";
+                        textFieldTelefono.requestFocus();
+                        break;
+
+                    case 6:
+                        cadenaAlert="Numero de personas no válido";
+                        textFieldNumPersonas.requestFocus();
+                        break;
+
+                    case 7:
+                        cadenaAlert = "Debes seleccionar un tipo de cocina";
+                        ComboBoxCocina.requestFocus();
+                        break;
+                        
+                    case 8:
+                        cadenaAlert="Debes seleccionar una fecha del evento";
+                        datePickerFechaEvento.requestFocus();
+                        break;
+                        
+                    case 9:
+                        cadenaAlert = "Debes introducir un numero en cantidad de habitaciones";
+                        textFieldCantidadHabitaciones.requestFocus();
+                        break;
+                        
+                    case 10:
+                        cadenaAlert = "Cantidad de habitaciones debe ser introducido";  
+                        textFieldCantidadHabitaciones.requestFocus();
+                        break;
+
+                    case 11:
+                        cadenaAlert ="Numero de dias no es un numero";   
+                        textFieldNumDias.requestFocus();
+                        break;
+                    case 12:
+                        cadenaAlert ="Numero de dias debe ser introducido"; 
+                        textFieldNumDias.requestFocus();
+                        break;
+                    case 13:
+                        cadenaAlert ="No has elegido ningun tipo de evento, porfavor elige uno";                   
+                        break;
+                   
+                    
+                   
+                        
+                }
+                 alert = new Alert(AlertType.ERROR, cadenaAlert);
+                 alert.showAndWait();
+                   
+                }
+                
+               
+               if(nuevaPersona && !errorFormato){
                     //Iniciamos de nuevo la transaccion
                     entityManager.getTransaction().begin();
                     
@@ -540,7 +679,7 @@ public class AppHotelReservaSalonViewController implements Initializable {
                     alertNuevaPersona.showAndWait();
                     entityManager.getTransaction().commit();
                 }
-                if(!nuevaPersona && !salir){
+                if(!nuevaPersona && !errorFormato){
                     //Iniciamos de nuevo la transaccion
                     entityManager.getTransaction().begin();
                     
@@ -568,7 +707,7 @@ public class AppHotelReservaSalonViewController implements Initializable {
                alertErrorEnBD.showAndWait();
                
            }
-        }
+        
         
     }
 
@@ -580,6 +719,7 @@ public class AppHotelReservaSalonViewController implements Initializable {
         
     }
     
+    //EXPRESIONES REGULARES
     public boolean comprobarDNI(){
         Pattern patronDNI = Pattern.compile("[0-9]{8}[A-Za-z]");
         Matcher match = patronDNI.matcher(textFieldDNI.getText());
@@ -594,6 +734,21 @@ public class AppHotelReservaSalonViewController implements Initializable {
       
         return match.matches();
     }
+    
+    public boolean comprobarNombre(){
+        Pattern patronNombre = Pattern.compile("[A-Za-z]{2,20}");
+        Matcher match = patronNombre.matcher(textFieldNombre.getText());
+      
+        return match.matches();
+    }
+    
+     public boolean comprobarDireccion(){
+        Pattern patronDireccion = Pattern.compile("[A-Za-z]{5,50}");
+        Matcher match = patronDireccion.matcher(textFieldDireccion.getText());
+      
+        return match.matches();
+    }
+    
     
     
      public void mostrarDatos() {
@@ -662,13 +817,23 @@ public class AppHotelReservaSalonViewController implements Initializable {
         textFieldNumDias.setEditable(false);
         textFieldNumDias.setDisable(true);
         datePickerFechaEvento.setEditable(false);
+        textFieldCantidadHabitaciones.setDisable(true);
         
     }
 
     @FXML
     private void onActionButtonCHHabitacion(ActionEvent event) {
         
-        textFieldCantidadHabitaciones.setEditable(true);
+        if(checkBoxhabitaciones.isSelected()){
+            textFieldCantidadHabitaciones.setDisable(false);
+            textFieldCantidadHabitaciones.setEditable(true);
+            
+        }
+        else{
+            textFieldCantidadHabitaciones.setDisable(true);
+            textFieldCantidadHabitaciones.setText("");
+        }
+       
         
     }
     

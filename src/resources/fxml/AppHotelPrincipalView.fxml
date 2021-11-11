@@ -13,11 +13,11 @@
         <URL value="@/resources/css/apphotelprincipalview.css" />
     </stylesheets>
    <children>
-      <MenuBar fx:id="MenuMain" layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
+      <MenuBar fx:id="MenuMain" layoutY="2.0" prefHeight="25.0" prefWidth="622.0">
         <menus>
           <Menu fx:id="MenuClientes" mnemonicParsing="false" text="Clientes">
             <items>
-              <MenuItem fx:id="MenuItem_MostrarClientes" mnemonicParsing="false" text="Mostrar Clientes" />
+              <MenuItem fx:id="MenuItem_MostrarClientes" mnemonicParsing="false" onAction="#MostrarTabla" text="Mostrar Clientes" />
             </items>
           </Menu>
           <Menu fx:id="MenuReservas" mnemonicParsing="false" text="Reservas">

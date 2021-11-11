@@ -136,12 +136,18 @@ public class AppHotelPrincipalViewController implements Initializable {
 
     @FXML
     private void AbreInformacion(ActionEvent event) {
+        
+        
     }
 
     //Cerramos la aplicacion al darle la menu Item cerrar
     @FXML
     private void Cerrar(ActionEvent event) {
         System.exit(0);
+    }
+
+    @FXML
+    private void MostrarTabla(ActionEvent event) {
     }
     
 }

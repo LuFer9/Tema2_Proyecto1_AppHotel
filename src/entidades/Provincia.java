@@ -106,7 +106,7 @@ public class Provincia implements Serializable {
 
     @Override
     public String toString() {
-        return "entidades.Provincia[ nombre=" + nombre + " ]";
+        return nombre;
     }
     
 }
