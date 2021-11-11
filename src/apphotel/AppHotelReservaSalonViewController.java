@@ -746,14 +746,14 @@ public class AppHotelReservaSalonViewController implements Initializable {
     }
     
     public boolean comprobarNombre(){
-        Pattern patronNombre = Pattern.compile("[A-Za-z]{2,20}");
+        Pattern patronNombre = Pattern.compile("[A-Za-zÀ-ÿ ]{2,20}");
         Matcher match = patronNombre.matcher(textFieldNombre.getText());
       
         return match.matches();
     }
     
      public boolean comprobarDireccion(){
-        Pattern patronDireccion = Pattern.compile("C/[A-Za-z]{3,50}, N[0-9], Portal[0-9]"); 
+        Pattern patronDireccion = Pattern.compile("C/[A-Za-zÀ-ÿ ]{3,50}, N[0-9], Portal[0-9]"); 
         Matcher match = patronDireccion.matcher(textFieldDireccion.getText());
       
         return match.matches();
