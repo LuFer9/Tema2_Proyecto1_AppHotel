@@ -37,6 +37,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -115,6 +116,9 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         //Configuramos el spinner
         SpinnerValueFactory<Integer> gradesValue = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1);
         this.spinnerNumHab.setValueFactory(gradesValue);
+        
+        //Se instancian los tooltips
+        realizarToltips();
 
             textFieldDNI.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldProperty, Boolean newProperty) -> {
                 
@@ -419,6 +423,8 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                     reservaH.setFumador(false);
                 }
                 
+                //Si queremos que no haya ningun valor a null se desselecciona esto
+                /*
                 //si telefono esta a null se pondra el valor a 0
                 if(persona.getTelefono() == null){
                    persona.setTelefono(0);
@@ -428,7 +434,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                 if(persona.getApellidos() == null){
                     persona.setApellidos("Vacío");
                 }
-                
+                */
                 //En caso de que haya algun error de formato mostramos los fallos
                 if(errorFormato){
                     
@@ -442,7 +448,7 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
                         textFieldNombre.requestFocus();
                         break;
                     case 3:
-                        cadenaAlert=" Campo direccion no valido ";
+                        cadenaAlert=" Campo direccion no valido, Sintaxis predefinida: C/(nombre_calle), N(numero_piso), Portal(numero_portal) ";
                         textFieldDireccion.requestFocus();
                         break;
                     case 4:
@@ -689,11 +695,12 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
     }
     
      public boolean comprobarDireccion(){
-        Pattern patronDireccion = Pattern.compile("[A-Za-z]{5,50}");
+        Pattern patronDireccion = Pattern.compile("C/[A-Za-z]{3,50}, N[0-9], Portal[0-9]"); 
         Matcher match = patronDireccion.matcher(textFieldDireccion.getText());
       
         return match.matches();
     }
+    
      
     public boolean comprobarLocalidad(){
         Pattern patronLocalidad = Pattern.compile("[A-Za-z]{3,20}");
@@ -729,6 +736,28 @@ public class AppHotelReservaHabitacionesViewController implements Initializable 
         radioButtonAlojamiento.setSelected(false);
         radioButtonMediaPension.setSelected(false);
         radioButtonPensionCompleta.setSelected(false);
+    }
+    
+    
+    //Tooltips
+    public void realizarToltips()
+    {
+       /*
+        Tooltip tooltipdni = new Tooltip();
+        tooltipdni.setText("Debes poner dni");
+        textFieldDNI.setTooltip(tooltipdni);
+        */
+        
+        textFieldDNI.setTooltip(new Tooltip(" Introduce DNI "));
+        textFieldNombre.setTooltip(new Tooltip(" Introduce el Nombre"));
+        textFieldDireccion.setTooltip(new Tooltip(" Introduce la direccion "));
+        textFieldLocalidad.setTooltip(new Tooltip(" Introduce la localidad "));
+        comboBoxProvincia.setTooltip(new Tooltip(" Introduce la provincia "));
+        datePickerLlegada.setTooltip(new Tooltip(" Introduce la fecha de llegada "));
+        datePickerSalida.setTooltip(new Tooltip(" Introduce la fecha de salida "));
+        spinnerNumHab.setTooltip(new Tooltip(" Introduce el numero de habitaciones "));
+        comboBoxTipoHab.setTooltip(new Tooltip(" Introduce el tipo de habitacion "));
+        checkBoxFumador.setTooltip(new Tooltip(" Selecciona si eres fumador o no "));
     }
     
            

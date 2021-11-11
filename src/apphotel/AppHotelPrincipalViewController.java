@@ -134,20 +134,48 @@ public class AppHotelPrincipalViewController implements Initializable {
         }
     }
 
-    @FXML
-    private void AbreInformacion(ActionEvent event) {
-        
-        
-    }
-
     //Cerramos la aplicacion al darle la menu Item cerrar
     @FXML
     private void Cerrar(ActionEvent event) {
         System.exit(0);
     }
+    
 
     @FXML
-    private void MostrarTabla(ActionEvent event) {
+    private void MostrarClientes(ActionEvent event) {
+        try
+        {
+            //Cargamos la vista de mostarClientes
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/fxml/AppHotelClienteView.fxml"));
+            Pane rootClienteView = fxmlLoader.load();
+            
+            // Ocular la vista princvipal de la AppHotelPrincipalView
+            AppHotelPrincipalView.setVisible(false);
+            
+            //Añadimos la vista mostratClientes al stackPane principal
+            StackPane root_AppHotelPrincipalView = (StackPane) AppHotelPrincipalView.getScene().getRoot();
+            root_AppHotelPrincipalView.getChildren().add(rootClienteView);
+            
+            //Añadimos el controlador
+            AppHotelClienteViewController clienteController = (AppHotelClienteViewController) fxmlLoader.getController();
+            clienteController.setRootPrincipalView(AppHotelPrincipalView);     
+            clienteController.setEntityManager(entityManager);
+            clienteController.cargarTodasPersonas();
+           
+            
+           
+            
+        }
+        catch(IOException ex)
+        {
+            Logger.getLogger(AppHotelPrincipalViewController.class.getName()).log(Level.SEVERE,null,ex);
+        }
+        
     }
+
+    @FXML
+    private void AbreInformacion(ActionEvent event) {
+    }
+
     
 }

@@ -5,3 +5,34 @@
 .mainFxmlClass {
 
 }
+#textoBanquete{
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: lightseagreen;
+}
+#textoJornada{
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: mediumorchid;
+}
+#textoCongreso{
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+    -fx-text-fill: burlywood;
+}
+
+#textoBanquete2{
+    -fx-font-size: 10pt;
+    -fx-font-style: italic;
+    -fx-text-fill: lightseagreen;
+}
+#textoJornada2{
+    -fx-font-size: 10pt;
+    -fx-font-style: italic;
+    -fx-text-fill: mediumorchid;
+}
+#textoCongreso2{
+    -fx-font-size: 10pt;
+    -fx-font-style: italic;
+    -fx-text-fill: burlywood;
+}

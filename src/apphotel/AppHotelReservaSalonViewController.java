@@ -6,10 +6,8 @@
 package apphotel;
 
 import entidades.Persona;
-import entidades.Provincia;
 import entidades.ReservaSalon;
 import entidades.TipoCocina;
-import entidades.TipoHabitacion;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -37,6 +35,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -129,6 +128,8 @@ public class AppHotelReservaSalonViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        realizarToltips();
+        
         textFieldDNI.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldProperty, Boolean newProperty) -> {
                 
                 if(newProperty){
@@ -197,7 +198,10 @@ public class AppHotelReservaSalonViewController implements Initializable {
 
         
         textLabelTipoEvento.setText("Tipo: Banquete");
+        textLabelTipoEvento.setId("textoBanquete");
+        
         textLabelTipoEvento2.setText("Selecciona personas...");
+        textLabelTipoEvento2.setId("textoBanquete2");
         
         Image imagen = new Image("/resources/images/Banquete.jpg",250,200,true,false);
         imageViewFoto.setImage(imagen);
@@ -217,7 +221,10 @@ public class AppHotelReservaSalonViewController implements Initializable {
         textFieldNumPersonas.setEditable(true);
         
         textLabelTipoEvento.setText("Tipo: Jornada");
+        textLabelTipoEvento.setId("textoJornada");
+        
         textLabelTipoEvento2.setText("Selecciona personas...");
+        textLabelTipoEvento2.setId("textoJornada2");
         
         Image imagen = new Image("/resources/images/Jornada.jpg",300,300,true,false);
         imageViewFoto.setImage(imagen);
@@ -576,6 +583,8 @@ public class AppHotelReservaSalonViewController implements Initializable {
                    }
                }
                
+               //Si queremos que no haya ningun valor a null se desselecciona esto
+               /*
                //si provincia esta a null se setea un valor por defecto
                if(persona.getProvincia() == null){
                    Provincia provincia = new Provincia();
@@ -594,6 +603,7 @@ public class AppHotelReservaSalonViewController implements Initializable {
                if(persona.getApellidos() == null){
                     persona.setApellidos("Vacío");
                 }
+                */
         
                
                //En caso de que haya algun error de formato mostramos los fallos
@@ -609,7 +619,7 @@ public class AppHotelReservaSalonViewController implements Initializable {
                         textFieldNombre.requestFocus();
                         break;
                     case 3:
-                        cadenaAlert=" Campo direccion no valido ";
+                        cadenaAlert=" Campo direccion no valido,  Sintaxis predefinida: C/(nombre_calle), N(numero_piso), Portal(numero_portal) ";
                         textFieldDireccion.requestFocus();
                         break;
                     case 4:
@@ -743,7 +753,7 @@ public class AppHotelReservaSalonViewController implements Initializable {
     }
     
      public boolean comprobarDireccion(){
-        Pattern patronDireccion = Pattern.compile("[A-Za-z]{5,50}");
+        Pattern patronDireccion = Pattern.compile("C/[A-Za-z]{3,50}, N[0-9], Portal[0-9]"); 
         Matcher match = patronDireccion.matcher(textFieldDireccion.getText());
       
         return match.matches();
@@ -846,7 +856,33 @@ public class AppHotelReservaSalonViewController implements Initializable {
         textFieldNumDias.setText("");
         checkBoxhabitaciones.setSelected(false);   
     }
-      
+     
+    
+    //Tooltips
+    public void realizarToltips()
+    {
+       /*
+        Tooltip tooltipdni = new Tooltip();
+        tooltipdni.setText("Debes poner dni");
+        textFieldDNI.setTooltip(tooltipdni);
+        */
+        
+        textFieldDNI.setTooltip(new Tooltip(" Introduce DNI "));
+        textFieldNombre.setTooltip(new Tooltip(" Introduce el Nombre"));
+        textFieldDireccion.setTooltip(new Tooltip(" Introduce la direccion "));
+        textFieldTelefono.setTooltip(new Tooltip(" Introduce el telefono"));
+        RadioButtonBanquete.setTooltip(new Tooltip("Selecciona el banquete"));
+        RadioButtonJornada.setTooltip(new Tooltip("selecciona la jornada"));
+        RadioButtonCongreso.setTooltip(new Tooltip(" selecciona el congreso "));
+        datePickerFechaEvento.setTooltip(new Tooltip(" Introduce el fecha del evento"));
+        textFieldNumPersonas.setTooltip(new Tooltip(" Introduce el numero de personas "));
+        ComboBoxCocina.setTooltip(new Tooltip(" Selecciona la cocina"));
+        checkBoxhabitaciones.setTooltip(new Tooltip(" Selecciona si quieres habitaciones o no"));
+        textFieldCantidadHabitaciones.setTooltip(new Tooltip(" selecciona la cantidad de habitaciones que necesitas "));
+        textFieldNumDias.setTooltip(new Tooltip(" selecciona la cantidad de dias que va a durar el evento"));
+        
+
+    }
 
     
 }

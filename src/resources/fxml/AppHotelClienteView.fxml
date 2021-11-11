@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" fx:id="viewCliente" prefHeight="499.0" prefWidth="609.0" style="-fx-background-color: #DFEAF2;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apphotel.AppHotelClienteViewController">
+   <children>
+      <TableView fx:id="tableViewCliente" layoutX="8.0" layoutY="77.0" prefHeight="288.0" prefWidth="609.0">
+        <columns>
+          <TableColumn fx:id="columnDNI" prefWidth="92.0" text="DNI" />
+          <TableColumn fx:id="columnNombre" text="Nombre" />
+            <TableColumn fx:id="columnDireccion" prefWidth="144.0" text="Dirección" />
+            <TableColumn fx:id="columnLocalidad" prefWidth="97.0" text="Localidad" />
+            <TableColumn fx:id="columnProvincia" minWidth="7.99993896484375" prefWidth="107.0" text="Provincia" />
+            <TableColumn fx:id="columnTelefono" prefWidth="88.0" text="Teléfono" />
+        </columns>
+      </TableView>
+      <Button fx:id="buttonSalir" layoutX="250.0" layoutY="404.0" mnemonicParsing="false" onAction="#onActionSalir" prefHeight="25.0" prefWidth="126.0" style="-fx-background-color: #FCDEB0;" text="Salir">
+         <effect>
+            <DropShadow />
+         </effect></Button>
+   </children>
+</AnchorPane>

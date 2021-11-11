@@ -17,7 +17,7 @@
         <menus>
           <Menu fx:id="MenuClientes" mnemonicParsing="false" text="Clientes">
             <items>
-              <MenuItem fx:id="MenuItem_MostrarClientes" mnemonicParsing="false" onAction="#MostrarTabla" text="Mostrar Clientes" />
+              <MenuItem fx:id="MenuItem_MostrarClientes" mnemonicParsing="false" onAction="#MostrarClientes" text="Mostrar Clientes" />
             </items>
           </Menu>
           <Menu fx:id="MenuReservas" mnemonicParsing="false" text="Reservas">
