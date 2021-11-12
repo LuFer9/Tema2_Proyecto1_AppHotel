@@ -6,8 +6,10 @@
 package apphotel;
 
 import entidades.Persona;
+import entidades.Provincia;
 import entidades.ReservaSalon;
 import entidades.TipoCocina;
+import entidades.TipoHabitacion;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -118,6 +120,7 @@ public class AppHotelReservaSalonViewController implements Initializable {
     private ToggleGroup ToggleGroupTipoEvento;
     @FXML
     private TextField textFieldCantidadHabitaciones;
+    private Provincia provincia = new Provincia();
     
         
     public static final String BANQUETE = "BANQUETE";
@@ -149,6 +152,15 @@ public class AppHotelReservaSalonViewController implements Initializable {
                         textFieldDireccion.setText(persona.getDireccion());
                         textFieldDireccion.setEditable(false);
                         textFieldTelefono.setText(String.valueOf(persona.getTelefono()));
+                        
+                        Query queryFindTipoHab = entityManager.createNamedQuery("Provicnia.findByNombre");
+                        queryFindTipoHab.setParameter("nombre", "SIN PROVINCIA");
+                        provincia = (Provincia) queryFindTipoHab.getSingleResult();
+                        
+                        if(persona.getProvincia() == null){
+                            persona.setProvincia(provincia);
+                        }
+                        
                         if(persona.getTelefono() != 0){
                             textFieldTelefono.setEditable(false);
                         }
@@ -163,13 +175,6 @@ public class AppHotelReservaSalonViewController implements Initializable {
                         System.out.println("ola nueva persona");
                         LimpiarDatos();
                         limpiarDatosInternosAlCambiarDeRadioButton();
-                                
-                        if(textFieldDNI.getText().equals("")){
-                           
-                        }
-                        else{
-                            
-                        }
                         
                     }
                 }
@@ -383,16 +388,24 @@ public class AppHotelReservaSalonViewController implements Initializable {
                     
                     if(!errorFormato){
                         
-                        //Numero de personas
-                        if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 100){
+                        try{
+                             //Numero de personas
+                            if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 100){
 
-                            reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                                reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                            }
+                            else{
+                                errorFormato = true;
+                                codError = 6;
+
+                            }
+                            
                         }
-                        else{
+                        catch(NumberFormatException e){
                             errorFormato = true;
                             codError = 6;
-
                         }
+                       
                         
                     }
                     
@@ -450,12 +463,20 @@ public class AppHotelReservaSalonViewController implements Initializable {
                     
                     if(!errorFormato){
                         
-                        //Numero de personas
-                        if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 50){
+                        try{
+                             //Numero de personas
+                            if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 100){
 
-                            reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                                reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                            }
+                            else{
+                                errorFormato = true;
+                                codError = 6;
+
+                            }
+                            
                         }
-                        else{
+                        catch(NumberFormatException e){
                             errorFormato = true;
                             codError = 6;
                         }
@@ -489,12 +510,20 @@ public class AppHotelReservaSalonViewController implements Initializable {
                    
                    if(!errorFormato){
                        
-                       //Numero de personas
-                        if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 50){
+                       try{
+                             //Numero de personas
+                            if(textFieldNumPersonas.getText() != null && Integer.valueOf(textFieldNumPersonas.getText()) > 1 && Integer.valueOf(textFieldNumPersonas.getText()) < 100){
 
-                            reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                                reservaSalon.setNumPersonas(Integer.valueOf(textFieldNumPersonas.getText()));
+                            }
+                            else{
+                                errorFormato = true;
+                                codError = 6;
+
+                            }
+                            
                         }
-                        else{
+                        catch(NumberFormatException e){
                             errorFormato = true;
                             codError = 6;
                         }

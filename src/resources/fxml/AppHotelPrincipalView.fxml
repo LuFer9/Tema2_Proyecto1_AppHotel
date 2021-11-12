@@ -28,7 +28,7 @@
           </Menu>
           <Menu fx:id="ManuAyuda" mnemonicParsing="false" text="Ayuda">
             <items>
-              <MenuItem fx:id="MenuItem_Informacion" mnemonicParsing="false" onAction="#AbreInformacion" text="Informacíon" />
+              <MenuItem fx:id="MenuItem_Informacion" mnemonicParsing="false" onAction="#AbreInformacion" text="Información" />
                   <MenuItem fx:id="MenuItem_Salir" mnemonicParsing="false" onAction="#Cerrar" text="Salir" />
             </items>
           </Menu>
